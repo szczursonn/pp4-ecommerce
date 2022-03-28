@@ -18,7 +18,6 @@ public class HelloController {
         return nameProvider.allNames();
     }
 
-
     @GetMapping("/hello")
     String hello() {
         return "Hi 5 Kuba !!!";
