@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import pl.mszcz.ecommerce.NameProvider;
 import pl.mszcz.productcatalog.CantPublishProductException;
+import pl.mszcz.productcatalog.MapProductStorage;
 import pl.mszcz.productcatalog.ProductCatalog;
+import pl.mszcz.productcatalog.ProductStorage;
 
 import java.math.BigDecimal;
 
@@ -22,8 +24,13 @@ public class App {
     }
 
     @Bean
-    ProductCatalog createMyProductCatalog() throws CantPublishProductException {
-        ProductCatalog productCatalog = new ProductCatalog();
+    ProductStorage createProductStorage() {
+        return new MapProductStorage();
+    }
+
+    @Bean
+    ProductCatalog createMyProductCatalog(ProductStorage productStorage) throws CantPublishProductException {
+        ProductCatalog productCatalog = new ProductCatalog(productStorage);
         String productId1 = productCatalog.addProduct("lego-set-1", "Nice Lego set");
         productCatalog.setImageUrl(productId1, "https://picsum.photos/id/237/200/300");
         productCatalog.setPrice(productId1, BigDecimal.TEN);

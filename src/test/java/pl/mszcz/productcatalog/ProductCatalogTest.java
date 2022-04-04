@@ -66,6 +66,7 @@ public class ProductCatalogTest {
     }
 
     private ProductCatalog thereIsProductCatalog() {
-        return new ProductCatalog();
+        ProductStorage productStorage = new MapProductStorage();
+        return new ProductCatalog(productStorage);
     }
 }

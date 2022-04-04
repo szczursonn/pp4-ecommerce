@@ -7,21 +7,22 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ProductCatalog {
-    private final Map<String, ProductData> products;
 
-    public ProductCatalog() {
-        this.products = new HashMap<>();
+    private final ProductStorage productStorage;
+
+    public ProductCatalog(ProductStorage productStorage) {
+        this.productStorage = productStorage;
     }
 
     public String addProduct(String productId, String name) {
         ProductData newProduct = new ProductData(productId, name);
-        this.products.put(productId, newProduct);
+        this.productStorage.save(newProduct);
 
         return productId;
     }
 
     public ProductData getProductById(String productId) {
-        return this.products.get(productId);
+        return this.productStorage.load(productId);
     }
 
     public void publishProduct(String productId) throws CantPublishProductException {
@@ -43,14 +44,11 @@ public class ProductCatalog {
     }
 
     public List<ProductData> getPublishedProducts() {
-        return this.products.values()
-                .stream()
-                .filter((productData -> productData.isPublished()))
-                .collect(Collectors.toList());
+        return this.productStorage.allPublished();
     }
 
     public void setPrice(String productId, BigDecimal price) {
-        ProductData product = this.products.get(productId);
+        ProductData product = this.productStorage.load(productId);
 
         if (product == null) {
             throw new InvalidProductIdException();
@@ -60,7 +58,7 @@ public class ProductCatalog {
     }
 
     public void setImageUrl(String productId, String imageUrl) {
-        ProductData product = this.products.get(productId);
+        ProductData product = this.productStorage.load(productId);
 
         if (product == null) {
             throw new InvalidProductIdException();
