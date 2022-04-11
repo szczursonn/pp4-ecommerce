@@ -1,13 +1,19 @@
 package pl.mszcz.productcatalog;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 
+@Entity
 public class ProductData {
-    private final String id;
+    @Id
+    private String id;
     private String name;
     private BigDecimal price;
     private String imageUrl;
     private boolean published;
+
+    public ProductData() {}
 
     public ProductData(String productId, String productName) {
         this.id = productId;
@@ -33,10 +39,6 @@ public class ProductData {
 
     public boolean isPublished() {
         return this.published;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setPrice(BigDecimal newPrice) {
