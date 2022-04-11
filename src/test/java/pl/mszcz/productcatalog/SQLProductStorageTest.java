@@ -55,18 +55,6 @@ public class SQLProductStorageTest {
         assertEquals(2, productsCount);
     }
 
-    @Test
-    void itAllowsToStoreAndLoadProduct() {
-        ProductData product = thereIsExampleProduct();
-        ProductStorage listProductStorage = thereIsSQLProductStorage();
-
-        listProductStorage.save(product);
-        ProductData loaded = listProductStorage.load(product.getId());
-
-        assertEquals(product.getId(), loaded.getId());
-        assertEquals(product.getName(), loaded.getName());
-    }
-
     private ProductStorage thereIsSQLProductStorage() {
         return new SQLProductStorage(jdbcTemplate);
     }

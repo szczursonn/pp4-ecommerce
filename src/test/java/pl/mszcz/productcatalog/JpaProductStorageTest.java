@@ -18,7 +18,5 @@ public class JpaProductStorageTest {
         productDataCRUD.save(data);
         ProductData loaded = productDataCRUD.getById(data.getId());
         assertEquals(data.getId(), loaded.getId());
-        // crashuje
-        // assertEquals(data.getName(), loaded.getName());
     }
 }
