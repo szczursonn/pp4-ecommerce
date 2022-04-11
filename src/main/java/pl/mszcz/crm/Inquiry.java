@@ -14,4 +14,20 @@ public class Inquiry {
     private String email;
     private String subject;
     private String description;
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getSubject() {
+        return this.subject;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
 }
