@@ -8,6 +8,10 @@ import pl.mszcz.productcatalog.CantPublishProductException;
 import pl.mszcz.productcatalog.MapProductStorage;
 import pl.mszcz.productcatalog.ProductCatalog;
 import pl.mszcz.productcatalog.ProductStorage;
+import pl.mszcz.sales.CartStorage;
+import pl.mszcz.sales.MapCartStorage;
+import pl.mszcz.sales.ProductDetailsProvider;
+import pl.mszcz.sales.Sales;
 
 import java.math.BigDecimal;
 
@@ -41,5 +45,15 @@ public class App {
         productCatalog.publishProduct(productId2);
 
         return productCatalog;
+    }
+
+    @Bean
+    Sales createSales() {
+        return new Sales(new MapCartStorage(), new ProductDetailsProvider());
+    }
+
+    @Bean
+    CartStorage createCartStorage() {
+        return new MapCartStorage();
     }
 }
