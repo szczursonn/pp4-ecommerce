@@ -1,0 +1,21 @@
+.Navbar {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: darken(#282c34, 2.5%);
+    .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .shoplogo {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+    .divider {
+        height: 2px;
+        background-color: darken(#282c34, 5%);
+    }
+}
