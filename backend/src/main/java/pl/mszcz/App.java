@@ -44,18 +44,12 @@ public class App {
 
     @Bean
     ProductDetailsProvider detailsProvider(ProductCatalog catalog) {
-        return (productId -> {
-            ProductData data = catalog.getProductById(productId);
-            return Optional.of(new ProductDetails(
-                    data.getId(),
-                    data.getName(),
-                    data.getPrice()));
-        });
+        return new RealProductDetailsProvider(catalog);
     }
 
     @Bean
-    Sales createSales() {
-        return new Sales(new MapCartStorage(), new MapProductDetailsProvider());
+    Sales createSales(ProductDetailsProvider productDetailsProvider) {
+        return new Sales(new MapCartStorage(), productDetailsProvider);
     }
 
     @Bean

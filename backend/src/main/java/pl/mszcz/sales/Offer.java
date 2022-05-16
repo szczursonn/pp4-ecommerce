@@ -2,33 +2,36 @@ package pl.mszcz.sales;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Offer {
-    private BigDecimal total;
-    private int size;
-    private ArrayList<OfferItem> items;
+    private final BigDecimal total;
+    private final int size;
+    private final List<CartItem> items;
 
     public Offer() {
-        this.total = BigDecimal.ZERO;
-        this.items = new ArrayList<>();
-        this.size = 0;
+        this(new ArrayList<>());
     }
 
-    public Offer(BigDecimal total, int size) {
-        this.total = total;
-        this.items = new ArrayList<>();
-        this.size = size;
+    public Offer(List<CartItem> items) {
+        this.items = items;
+        this.total = items
+                .stream()
+                .map(item->item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+        this.size = items.size();
     }
 
-    public static Offer blank() {
-        return new Offer();
-    }
-
-    public static Offer of(BigDecimal total, int cartSize) {
-        return new Offer(total, cartSize);
+    public List<CartItem> getItems() {
+        return items;
     }
 
     public BigDecimal getTotal() {
         return total;
+    }
+
+    public int getItemsCount() {
+        return size;
     }
 }

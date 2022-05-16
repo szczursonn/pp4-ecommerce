@@ -1,10 +1,7 @@
 package pl.mszcz.sales;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -22,7 +19,7 @@ public class SalesController {
         return sales.getCurrentOffer(getCurrentCustomerId());
     }
 
-    @PostMapping("/api/sales/add-product/{productId}")
+    @PostMapping("/api/sales/offer/{productId}")
     void addToCart(@PathVariable String productId) {
         try {
             sales.addToCart(getCurrentCustomerId(), productId);
@@ -30,6 +27,11 @@ public class SalesController {
             // https://stackoverflow.com/questions/24292373/spring-boot-rest-controller-how-to-return-different-http-status-codes
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Product ID");
         }
+    }
+
+    @DeleteMapping("/api/sales/offer/{productId}")
+    void removeFromCart(@PathVariable String productId) {
+        // TODO
     }
 
     private String getCurrentCustomerId() {

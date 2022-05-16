@@ -2,13 +2,15 @@ package pl.mszcz.sales;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Cart {
-    private List<CartItem> items;
+    private Map<String, CartItem> items;
 
     public Cart() {
-        this.items = new ArrayList<>();
+        this.items = new HashMap<>();
     }
 
     public static Cart empty() {
@@ -19,20 +21,21 @@ public class Cart {
         return items.size();
     }
 
-    public BigDecimal getTotal() {
-        BigDecimal total = items
-                .stream()
-                .map(this::calculateLineTotal)
-                .reduce(BigDecimal::add)
-                .orElse(BigDecimal.ZERO);
-        return total;
+    private boolean isAlreadyInCart(CartItem cartItem) {
+        return items.get(cartItem.getProductId()) != null;
     }
 
-    private BigDecimal calculateLineTotal(CartItem cartItem) {
-        return cartItem.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+    public void add(CartItem cartItem) {
+        if (isAlreadyInCart(cartItem)) {
+            items.get(cartItem.getProductId()).increaseQuantity();
+            return;
+        }
+        items.put(cartItem.getProductId(), cartItem);
     }
 
-    public void add(CartItem item) {
-        items.add(item);
+    public Offer getOffer() {
+        return new Offer(
+                items.values().stream().toList()
+        );
     }
 }

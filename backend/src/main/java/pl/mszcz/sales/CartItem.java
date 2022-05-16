@@ -15,10 +15,6 @@ public class CartItem {
         this.quantity = 1;
     }
 
-    public static CartItem of(String productId, String name, BigDecimal price) {
-        return new CartItem(productId, name, price);
-    }
-
     public String getProductId() {
         return productId;
     }
@@ -36,6 +32,7 @@ public class CartItem {
     }
 
     public void increaseQuantity() {
-        quantity++;
+        this.quantity++;
     }
+
 }

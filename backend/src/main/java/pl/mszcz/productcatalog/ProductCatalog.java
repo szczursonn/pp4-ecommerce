@@ -2,6 +2,7 @@ package pl.mszcz.productcatalog;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductCatalog {
 
@@ -18,12 +19,13 @@ public class ProductCatalog {
         return productId;
     }
 
-    public ProductData getProductById(String productId) {
-        return this.productStorage.load(productId);
+    public Optional<ProductData> getProductById(String productId) {
+        return Optional.ofNullable(this.productStorage.load(productId));
     }
 
     public void publishProduct(String productId) throws CantPublishProductException {
-        ProductData product = this.getProductById(productId);
+        ProductData product = this.getProductById(productId)
+                .orElseThrow(CantPublishProductException::new);
 
         if (product == null) {
             throw new InvalidProductIdException();
