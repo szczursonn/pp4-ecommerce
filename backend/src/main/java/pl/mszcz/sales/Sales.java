@@ -1,5 +1,7 @@
 package pl.mszcz.sales;
 
+import java.math.BigDecimal;
+
 public class Sales {
 
     CartStorage cartStorage;
@@ -11,7 +13,10 @@ public class Sales {
     }
 
     public Offer getCurrentOffer(String customerId) {
-        return Offer.blank();
+        Cart cart = cartStorage.getForCustomer(customerId)
+                .orElse(Cart.empty());
+
+        return Offer.of(cart.getTotal(), cart.getItemsCount());
     }
 
     public void addToCart(String customerId, String productId) throws ProductNotAvailableException {
@@ -21,7 +26,7 @@ public class Sales {
         ProductDetails details = productDetailsProvider.findById(productId)
                 .orElseThrow(() -> new ProductNotAvailableException());
 
-        cart.add(CartItem.of(productId, details.name, details.price));
+        cart.add(CartItem.of(productId, details.getName(), details.getPrice()));
 
         cartStorage.save(customerId, cart);
     }

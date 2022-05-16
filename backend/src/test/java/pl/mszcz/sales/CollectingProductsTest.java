@@ -4,16 +4,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CollectingProductsTest {
 
     CartStorage cartStorage;
+    List<ProductDetails> productDetails;
 
     @BeforeEach
     void setup() {
         cartStorage = new MapCartStorage();
+        productDetails = new ArrayList<>();
     }
 
     @Test
@@ -55,7 +59,7 @@ public class CollectingProductsTest {
     }
 
     private Sales thereIsSalesModule() {
-        return new Sales(cartStorage, new ProductDetailsProvider());
+        return new Sales(cartStorage, new MapProductDetailsProvider(this.productDetails));
     }
 
     private String thereIsCustomer(String customerId) {
@@ -63,6 +67,7 @@ public class CollectingProductsTest {
     }
 
     private String thereIsProduct(String id, BigDecimal price) {
+        productDetails.add(new ProductDetails(id, "product-"+id, price));
         return id;
     }
 }

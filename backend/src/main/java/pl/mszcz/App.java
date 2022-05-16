@@ -4,16 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import pl.mszcz.ecommerce.NameProvider;
-import pl.mszcz.productcatalog.CantPublishProductException;
-import pl.mszcz.productcatalog.MapProductStorage;
-import pl.mszcz.productcatalog.ProductCatalog;
-import pl.mszcz.productcatalog.ProductStorage;
-import pl.mszcz.sales.CartStorage;
-import pl.mszcz.sales.MapCartStorage;
-import pl.mszcz.sales.ProductDetailsProvider;
-import pl.mszcz.sales.Sales;
+import pl.mszcz.productcatalog.*;
+import pl.mszcz.sales.*;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @SpringBootApplication
 public class App {
@@ -48,8 +43,19 @@ public class App {
     }
 
     @Bean
+    ProductDetailsProvider detailsProvider(ProductCatalog catalog) {
+        return (productId -> {
+            ProductData data = catalog.getProductById(productId);
+            return Optional.of(new ProductDetails(
+                    data.getId(),
+                    data.getName(),
+                    data.getPrice()));
+        });
+    }
+
+    @Bean
     Sales createSales() {
-        return new Sales(new MapCartStorage(), new ProductDetailsProvider());
+        return new Sales(new MapCartStorage(), new MapProductDetailsProvider());
     }
 
     @Bean
