@@ -50,6 +50,24 @@ public class SalesHttpTest {
     }
 
     @Test
+    void itAllowsToAddProductWithSpecifiedQuantity() {
+        String productId = thereIsProduct("super-lego-set-20", BigDecimal.valueOf(12.00));
+
+        String url1 = String.format("http://localhost:%s/api/sales/offer/%s?quantity=5", port, productId);
+        ResponseEntity<Offer> response1 = http.postForEntity(url1, null, null);
+
+        assertEquals(HttpStatus.OK, response1.getStatusCode());
+
+        String url2 = String.format("http://localhost:%s/api/sales/offer", port, productId);
+        ResponseEntity<Offer> response2 = http.getForEntity(url2, Offer.class);
+
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+
+        Offer offer = response2.getBody();
+        assertEquals(5, offer.getItems().get(0).getQuantity());
+    }
+
+    @Test
     void itDisallowsToAddInvalidProduct() {
         String url = String.format("http://localhost:%s/api/sales/offer/%s", port, "super-lego-set-12");
         ResponseEntity<Offer> response = http.postForEntity(url, null, null);

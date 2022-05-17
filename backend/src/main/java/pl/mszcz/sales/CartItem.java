@@ -3,16 +3,18 @@ package pl.mszcz.sales;
 import java.math.BigDecimal;
 
 public class CartItem {
-    private final String productId;
-    private final String name;
-    private final BigDecimal price;
+    private String productId;
+    private String name;
+    private BigDecimal price;
     private Integer quantity;
 
-    public CartItem(String productId, String name, BigDecimal price) {
+    private CartItem() {}
+
+    public CartItem(String productId, String name, BigDecimal price, Integer quantity) {
         this.productId = productId;
         this.name = name;
         this.price = price;
-        this.quantity = 1;
+        this.quantity = quantity;
     }
 
     public String getProductId() {
@@ -31,8 +33,8 @@ public class CartItem {
         return quantity;
     }
 
-    public void increaseQuantity() {
-        this.quantity++;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
 }

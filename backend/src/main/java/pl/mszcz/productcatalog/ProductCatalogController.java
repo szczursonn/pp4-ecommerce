@@ -13,7 +13,7 @@ public class ProductCatalogController {
         this.catalog = catalog;
     }
 
-    @GetMapping("/products")
+    @GetMapping("/api/products")
     List<ProductData> products() {
         return this.catalog.getPublishedProducts();
     }

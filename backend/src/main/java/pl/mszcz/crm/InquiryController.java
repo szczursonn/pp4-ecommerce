@@ -13,12 +13,12 @@ public class InquiryController {
     @Autowired
     InquiryCRUD inquiryCRUD;
 
-    @GetMapping("/contacts")
+    @GetMapping("/api/contacts")
     List<Inquiry> all() {
         return inquiryCRUD.findAll();
     }
 
-    @PostMapping("/contacts")
+    @PostMapping("/api/contacts")
     void createInquiry(@RequestBody Inquiry inquiry) {
         inquiryCRUD.save(inquiry);
     }

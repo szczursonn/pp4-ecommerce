@@ -27,7 +27,7 @@ public class Cart {
 
     public void add(CartItem cartItem) {
         if (isAlreadyInCart(cartItem)) {
-            items.get(cartItem.getProductId()).increaseQuantity();
+            items.get(cartItem.getProductId()).setQuantity(cartItem.getQuantity());
             return;
         }
         items.put(cartItem.getProductId(), cartItem);

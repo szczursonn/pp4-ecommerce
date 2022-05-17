@@ -17,14 +17,14 @@ public class Sales {
         return cart.getOffer();
     }
 
-    public void addToCart(String customerId, String productId) throws ProductNotAvailableException {
+    public void addToCart(String customerId, String productId, int quantity) throws ProductNotAvailableException {
         Cart cart = cartStorage.getForCustomer(customerId)
                 .orElse(Cart.empty());
 
         ProductDetails details = productDetailsProvider.findById(productId)
                 .orElseThrow(ProductNotAvailableException::new);
 
-        cart.add(new CartItem(productId, details.getName(), details.getPrice()));
+        cart.add(new CartItem(productId, details.getName(), details.getPrice(), quantity));
 
         cartStorage.save(customerId, cart);
     }

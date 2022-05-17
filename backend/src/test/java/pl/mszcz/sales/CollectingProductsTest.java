@@ -35,24 +35,53 @@ public class CollectingProductsTest {
         String customerId = thereIsCustomer("Kuba");
         String productId = thereIsProduct("Lego set", BigDecimal.TEN);
 
-        sales.addToCart(customerId, productId);
+        sales.addToCart(customerId, productId, 1);
         Offer currentOffer = sales.getCurrentOffer(customerId);
 
         assertEquals(BigDecimal.TEN, currentOffer.getTotal());
     }
 
     @Test
-    void itAllowsToAddSameProductTwice() throws ProductNotAvailableException {
+    void itAllowsToGetOfferSize() throws ProductNotAvailableException {
+        String customerId = thereIsCustomer("Kuba");
+        String productId1 = thereIsProduct("lego-set-1", BigDecimal.valueOf(10.00));
+        String productId2 = thereIsProduct("lego-set-2", BigDecimal.valueOf(15.00));
+        String productId3 = thereIsProduct("lego-set-5", BigDecimal.valueOf(5.00));
+
+        sales.addToCart(customerId, productId1, 2);
+        sales.addToCart(customerId, productId2, 4);
+        sales.addToCart(customerId, productId3, 7);
+
+        Offer offer = sales.getCurrentOffer(customerId);
+
+        assertEquals(3, offer.getItems().size());
+    }
+
+    @Test
+    void itAllowsToSetQuantity() throws ProductNotAvailableException {
         String customerId = thereIsCustomer("Kuba");
         String productId = thereIsProduct("lego-set-1", BigDecimal.TEN);
 
-        sales.addToCart(customerId, productId);
-        sales.addToCart(customerId, productId);
+        sales.addToCart(customerId, productId, 5);
 
         Offer offer = sales.getCurrentOffer(customerId);
 
         assertEquals(1, offer.getItems().size());
-        assertEquals(2, offer.getItems().get(0).getQuantity());
+        assertEquals(5, offer.getItems().get(0).getQuantity());
+    }
+
+    @Test
+    void itOverwritesPreviousQuantity() throws ProductNotAvailableException {
+        String customerId = thereIsCustomer("Kuba");
+        String productId = thereIsProduct("lego-set-1", BigDecimal.TEN);
+
+        sales.addToCart(customerId, productId, 1);
+        sales.addToCart(customerId, productId, 7);
+
+        Offer offer = sales.getCurrentOffer(customerId);
+
+        assertEquals(1, offer.getItems().size());
+        assertEquals(7, offer.getItems().get(0).getQuantity());
 
     }
 
@@ -62,8 +91,8 @@ public class CollectingProductsTest {
         String productId1 = thereIsProduct("lego-set-1", BigDecimal.valueOf(15.00));
         String productId2 = thereIsProduct("lego-set-2", BigDecimal.valueOf(6.00));
 
-        sales.addToCart(customerId, productId1);
-        sales.addToCart(customerId, productId2);
+        sales.addToCart(customerId, productId1, 1);
+        sales.addToCart(customerId, productId2, 1);
 
         Offer offer = sales.getCurrentOffer(customerId);
 
@@ -78,7 +107,7 @@ public class CollectingProductsTest {
         String customerId2 = thereIsCustomer("Maciek");
         String productId = thereIsProduct("Lego set", BigDecimal.TEN);
 
-        sales.addToCart(customerId1, productId);
+        sales.addToCart(customerId1, productId, 1);
         Offer offer1 = sales.getCurrentOffer(customerId1);
         Offer offer2 = sales.getCurrentOffer(customerId2);
 
