@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import pl.mszcz.productcatalog.ProductCatalog;
@@ -47,6 +49,39 @@ public class SalesHttpTest {
         ResponseEntity<Offer> response = http.postForEntity(url, null, null);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void itAllowsToRemoveProduct() {
+        String productId = thereIsProduct("super-lego-set-1234", BigDecimal.valueOf(17.20));
+
+        String url = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
+        ResponseEntity<Offer> response1 = http.postForEntity(url, null, null);
+
+        assertEquals(HttpStatus.OK, response1.getStatusCode());
+
+        HttpEntity<Void> request = new HttpEntity<>(null);
+        ResponseEntity<Void> response2 = http.exchange(url, HttpMethod.DELETE, request, Void.class);
+
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+
+        ResponseEntity<Offer> response3 = http.getForEntity(url, Offer.class);
+        Offer offer = response3.getBody();
+
+        assertEquals(0, offer.getItemsCount());
+    }
+
+    @Test
+    void itDisallowsToRemoveProductThatIsNotInCart() {
+        String productId = "super-lego-set-9999";
+
+        String url = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
+
+        HttpEntity<Void> request = new HttpEntity<>(null);
+        ResponseEntity<Void> response = http.exchange(url, HttpMethod.DELETE, request, Void.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
     }
 
     @Test

@@ -1,9 +1,6 @@
 package pl.mszcz.sales;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Cart {
@@ -31,6 +28,12 @@ public class Cart {
             return;
         }
         items.put(cartItem.getProductId(), cartItem);
+    }
+
+    public String remove(String productId) {
+        CartItem item = items.remove(productId);
+        if (item == null) return null;
+        return productId;
     }
 
     public Offer getOffer() {

@@ -28,4 +28,15 @@ public class Sales {
 
         cartStorage.save(customerId, cart);
     }
+
+    public void removeFromCart(String customerId, String productId) throws ProductNotAvailableException {
+        Cart cart = cartStorage.getForCustomer(customerId)
+                .orElse(Cart.empty());
+
+        String id = cart.remove(productId);
+
+        if (id == null) throw new ProductNotAvailableException();
+
+        cartStorage.save(customerId, cart);
+    }
 }

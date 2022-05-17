@@ -34,7 +34,12 @@ public class SalesController {
 
     @DeleteMapping("/api/sales/offer/{productId}")
     void removeFromCart(@PathVariable String productId) {
-        // TODO
+        try {
+            sales.removeFromCart(getCurrentCustomerId(), productId);
+        } catch (ProductNotAvailableException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not in cart");
+        }
+
     }
 
     private String getCurrentCustomerId() {
