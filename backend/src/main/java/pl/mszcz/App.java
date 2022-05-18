@@ -23,23 +23,33 @@ public class App {
 
     @Bean
     ProductStorage createProductStorage() {
-        return new MapProductStorage();
+        return new JpaProductStorage();
     }
 
     @Bean
-    ProductCatalog createMyProductCatalog(ProductStorage productStorage) throws CantPublishProductException {
+    ProductCatalog createMyProductCatalog(ProductStorage productStorage) {
         ProductCatalog productCatalog = new ProductCatalog(productStorage);
-        String productId1 = productCatalog.addProduct("lego-set-1", "Nice Lego set");
-        productCatalog.setImageUrl(productId1, "https://picsum.photos/id/237/200/300");
-        productCatalog.setPrice(productId1, BigDecimal.TEN);
-        productCatalog.publishProduct(productId1);
 
-        String productId2 = productCatalog.addProduct("lego-set-2", "Even nicer Lego set");
-        productCatalog.setImageUrl(productId2, "https://picsum.photos/id/238/200/300");
-        productCatalog.setPrice(productId2, BigDecimal.valueOf(20.20));
-        productCatalog.publishProduct(productId2);
+        createDefaultProducts(productCatalog);
 
         return productCatalog;
+
+    }
+
+    private void createDefaultProducts(ProductCatalog productCatalog) {
+        try {
+            String productId1 = productCatalog.addProduct("lego-set-1", "Nice Lego set");
+            productCatalog.setImageUrl(productId1, "https://picsum.photos/id/237/200/300");
+            productCatalog.setPrice(productId1, BigDecimal.TEN);
+            productCatalog.publishProduct(productId1);
+
+            String productId2 = productCatalog.addProduct("lego-set-2", "Even nicer Lego set");
+            productCatalog.setImageUrl(productId2, "https://picsum.photos/id/238/200/300");
+            productCatalog.setPrice(productId2, BigDecimal.valueOf(20.20));
+            productCatalog.publishProduct(productId2);
+        } catch (CantPublishProductException e) {
+            System.out.println("Failed to publish default products");
+        }
     }
 
     @Bean

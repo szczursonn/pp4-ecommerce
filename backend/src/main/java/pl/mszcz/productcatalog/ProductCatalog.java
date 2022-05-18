@@ -40,6 +40,8 @@ public class ProductCatalog {
         }
 
         product.setPublished(true);
+
+        productStorage.save(product);
     }
 
     public List<ProductData> getPublishedProducts() {
@@ -47,23 +49,27 @@ public class ProductCatalog {
     }
 
     public void setPrice(String productId, BigDecimal price) {
-        ProductData product = this.productStorage.load(productId);
+        ProductData product = productStorage.load(productId);
 
         if (product == null) {
             throw new InvalidProductIdException();
         }
 
         product.setPrice(price);
+
+        productStorage.save(product);
     }
 
     public void setImageUrl(String productId, String imageUrl) {
-        ProductData product = this.productStorage.load(productId);
+        ProductData product = productStorage.load(productId);
 
         if (product == null) {
             throw new InvalidProductIdException();
         }
 
         product.setImageUrl(imageUrl);
+
+        productStorage.save(product);
     }
 
 }
