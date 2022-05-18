@@ -1,11 +1,12 @@
 package pl.mszcz.productcatalog;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductStorage {
-    void save(ProductData newProduct);
+    ProductData save(ProductData productData);
 
-    ProductData load(String productId);
+    Optional<ProductData> load(Long productId);
 
     List<ProductData> allPublished();
 }

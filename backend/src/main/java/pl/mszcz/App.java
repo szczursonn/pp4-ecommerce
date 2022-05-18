@@ -38,12 +38,12 @@ public class App {
 
     private void createDefaultProducts(ProductCatalog productCatalog) {
         try {
-            String productId1 = productCatalog.addProduct("lego-set-1", "Nice Lego set");
+            Long productId1 = productCatalog.addProduct("Lego set 1").getId();
             productCatalog.setImageUrl(productId1, "https://picsum.photos/id/237/200/300");
             productCatalog.setPrice(productId1, BigDecimal.TEN);
             productCatalog.publishProduct(productId1);
 
-            String productId2 = productCatalog.addProduct("lego-set-2", "Even nicer Lego set");
+            Long productId2 = productCatalog.addProduct("Lego set 2").getId();
             productCatalog.setImageUrl(productId2, "https://picsum.photos/id/238/200/300");
             productCatalog.setPrice(productId2, BigDecimal.valueOf(20.20));
             productCatalog.publishProduct(productId2);

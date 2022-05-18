@@ -11,7 +11,8 @@ public class MapProductStorageTest {
         ProductStorage listProductStorage = thereIsListProductStorage();
 
         listProductStorage.save(product);
-        ProductData loaded = listProductStorage.load(product.getId());
+        ProductData loaded = listProductStorage.load(product.getId())
+                .orElseThrow();
 
         assertEquals(product.getId(), loaded.getId());
         assertEquals(product.getName(), loaded.getName());
@@ -22,6 +23,6 @@ public class MapProductStorageTest {
     }
 
     private ProductData thereIsExampleProduct() {
-        return new ProductData("lego", "Nice One");
+        return new ProductData(1L, "Nice One");
     }
 }

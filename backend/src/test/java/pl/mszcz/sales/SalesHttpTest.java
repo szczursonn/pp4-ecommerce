@@ -43,7 +43,7 @@ public class SalesHttpTest {
 
     @Test
     void itAllowsToAddProduct() {
-        String productId = thereIsProduct("super-lego-set-12", BigDecimal.valueOf(12.00));
+        Long productId = thereIsProduct("giga lego set", BigDecimal.valueOf(12.00));
 
         String url = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
         ResponseEntity<Offer> response = http.postForEntity(url, null, null);
@@ -53,7 +53,7 @@ public class SalesHttpTest {
 
     @Test
     void itAllowsToRemoveProduct() {
-        String productId = thereIsProduct("super-lego-set-1234", BigDecimal.valueOf(17.20));
+        Long productId = thereIsProduct("fantastyczny secik lego", BigDecimal.valueOf(17.20));
 
         String url = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
         ResponseEntity<Offer> response1 = http.postForEntity(url, null, null);
@@ -73,9 +73,8 @@ public class SalesHttpTest {
 
     @Test
     void itDisallowsToRemoveProductThatIsNotInCart() {
-        String productId = "super-lego-set-9999";
 
-        String url = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
+        String url = String.format("http://localhost:%s/api/sales/offer/%s", port, 54395439L);
 
         HttpEntity<Void> request = new HttpEntity<>(null);
         ResponseEntity<Void> response = http.exchange(url, HttpMethod.DELETE, request, Void.class);
@@ -86,7 +85,7 @@ public class SalesHttpTest {
 
     @Test
     void itAllowsToAddProductWithSpecifiedQuantity() {
-        String productId = thereIsProduct("super-lego-set-20", BigDecimal.valueOf(12.00));
+        Long productId = thereIsProduct("lego set fajny taki", BigDecimal.valueOf(12.00));
 
         String url1 = String.format("http://localhost:%s/api/sales/offer/%s?quantity=5", port, productId);
         ResponseEntity<Offer> response1 = http.postForEntity(url1, null, null);
@@ -104,14 +103,14 @@ public class SalesHttpTest {
 
     @Test
     void itDisallowsToAddInvalidProduct() {
-        String url = String.format("http://localhost:%s/api/sales/offer/%s", port, "super-lego-set-12");
+        String url = String.format("http://localhost:%s/api/sales/offer/%s", port, 10L);
         ResponseEntity<Offer> response = http.postForEntity(url, null, null);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
-    private String thereIsProduct(String productId, BigDecimal price) {
-        productCatalog.addProduct(productId, "product-"+productId);
+    private Long thereIsProduct(String name, BigDecimal price) {
+        Long productId = productCatalog.addProduct(name).getId();
         productCatalog.setPrice(productId, price);
         return productId;
     }

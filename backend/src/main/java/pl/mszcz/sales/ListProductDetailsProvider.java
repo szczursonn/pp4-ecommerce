@@ -11,7 +11,7 @@ public class ListProductDetailsProvider implements ProductDetailsProvider {
         this.productDetails = productDetails;
     }
 
-    public Optional<ProductDetails> findById(String productId) {
+    public Optional<ProductDetails> findById(Long productId) {
         return productDetails.stream()
                 .filter(p -> p.getProductId().equals(productId))
                 .findFirst();

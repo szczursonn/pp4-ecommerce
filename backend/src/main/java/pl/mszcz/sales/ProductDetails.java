@@ -3,17 +3,17 @@ package pl.mszcz.sales;
 import java.math.BigDecimal;
 
 public class ProductDetails {
-    private String productId;
-    private String name;
-    private BigDecimal price;
+    private final Long productId;
+    private final String name;
+    private final BigDecimal price;
 
-    public ProductDetails(String productId, String name, BigDecimal price) {
+    public ProductDetails(Long productId, String name, BigDecimal price) {
         this.productId = productId;
         this.name = name;
         this.price = price;
     }
 
-    public String getProductId() {
+    public Long getProductId() {
         return productId;
     }
 

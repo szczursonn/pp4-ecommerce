@@ -11,7 +11,7 @@ public class InquiryCRUDTest {
     private InquiryCRUD inquiryCRUD;
 
     @Test
-    public void itAllowsToSaveInquiry() {
+    public void itDoesntCrash() {
         inquiryCRUD.findAll();
     }
 }

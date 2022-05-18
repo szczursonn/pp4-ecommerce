@@ -18,7 +18,7 @@ public class ProductCatalogTest {
     @Test
     void itAllowsToAddProductDraft() {
         ProductCatalog catalog = thereIsProductCatalog();
-        String productId = catalog.addProduct("lego-set-1", "super lego set");
+        Long productId = catalog.addProduct("super lego set").getId();
 
         List<ProductData> products = catalog.getPublishedProducts();
         assertEquals(0, products.size());
@@ -30,34 +30,34 @@ public class ProductCatalogTest {
     @Test
     void itDeniesToPublishProductWithoutPrice() {
         ProductCatalog catalog = thereIsProductCatalog();
-        catalog.addProduct("1", "aaa");
-        catalog.setImageUrl("1", "fsdfhfds");
+        Long productId = catalog.addProduct("giga lego set 2000").getId();
+        catalog.setImageUrl(productId, "fsdfhfds");
 
         assertThrows(CantPublishProductException.class, ()->{
-            catalog.publishProduct("1");
+            catalog.publishProduct(productId);
         });
     }
 
     @Test
     void itDeniesToPublishProductWithoutImageUrl() {
         ProductCatalog catalog = thereIsProductCatalog();
-        catalog.addProduct("1", "aaa");
-        catalog.setPrice("1", BigDecimal.valueOf(12.50));
+        Long productId = catalog.addProduct("lego set").getId();
+        catalog.setPrice(productId, BigDecimal.valueOf(12.50));
 
         assertThrows(CantPublishProductException.class, ()->{
-            catalog.publishProduct("1");
+            catalog.publishProduct(productId);
         });
     }
 
     @Test
     void itAllowsToPublishProduct() {
         ProductCatalog catalog = thereIsProductCatalog();
-        catalog.addProduct("1", "aaa");
-        catalog.setImageUrl("1", "http://fsdfhfds.com/pr1.png");
-        catalog.setPrice("1", BigDecimal.valueOf(12.50));
+        Long productId = catalog.addProduct("produkcik").getId();
+        catalog.setImageUrl(productId, "http://fsdfhfds.com/pr1.png");
+        catalog.setPrice(productId, BigDecimal.valueOf(12.50));
 
         assertDoesNotThrow(()->{
-            catalog.publishProduct("1");
+            catalog.publishProduct(productId);
         });
 
         List<ProductData> products = catalog.getPublishedProducts();

@@ -33,7 +33,7 @@ public class CollectingProductsTest {
     @Test
     void itAllowsToAddProduct() throws ProductNotAvailableException {
         String customerId = thereIsCustomer("Kuba");
-        String productId = thereIsProduct("Lego set", BigDecimal.TEN);
+        Long productId = thereIsProduct(5L, BigDecimal.TEN);
 
         sales.addToCart(customerId, productId, 1);
         Offer currentOffer = sales.getCurrentOffer(customerId);
@@ -44,9 +44,9 @@ public class CollectingProductsTest {
     @Test
     void itAllowsToGetOfferSize() throws ProductNotAvailableException {
         String customerId = thereIsCustomer("Kuba");
-        String productId1 = thereIsProduct("lego-set-1", BigDecimal.valueOf(10.00));
-        String productId2 = thereIsProduct("lego-set-2", BigDecimal.valueOf(15.00));
-        String productId3 = thereIsProduct("lego-set-5", BigDecimal.valueOf(5.00));
+        Long productId1 = thereIsProduct(5L, BigDecimal.valueOf(10.00));
+        Long productId2 = thereIsProduct(10L, BigDecimal.valueOf(15.00));
+        Long productId3 = thereIsProduct(15L, BigDecimal.valueOf(5.00));
 
         sales.addToCart(customerId, productId1, 2);
         sales.addToCart(customerId, productId2, 4);
@@ -60,7 +60,7 @@ public class CollectingProductsTest {
     @Test
     void itAllowsToSetQuantity() throws ProductNotAvailableException {
         String customerId = thereIsCustomer("Kuba");
-        String productId = thereIsProduct("lego-set-1", BigDecimal.TEN);
+        Long productId = thereIsProduct(10L, BigDecimal.TEN);
 
         sales.addToCart(customerId, productId, 5);
 
@@ -73,7 +73,7 @@ public class CollectingProductsTest {
     @Test
     void itOverwritesPreviousQuantity() throws ProductNotAvailableException {
         String customerId = thereIsCustomer("Kuba");
-        String productId = thereIsProduct("lego-set-1", BigDecimal.TEN);
+        Long productId = thereIsProduct(10L, BigDecimal.TEN);
 
         sales.addToCart(customerId, productId, 1);
         sales.addToCart(customerId, productId, 7);
@@ -88,8 +88,8 @@ public class CollectingProductsTest {
     @Test
     void itAllowsToAddDifferentProducts() throws ProductNotAvailableException {
         String customerId = thereIsCustomer("Kuba");
-        String productId1 = thereIsProduct("lego-set-1", BigDecimal.valueOf(15.00));
-        String productId2 = thereIsProduct("lego-set-2", BigDecimal.valueOf(6.00));
+        Long productId1 = thereIsProduct(10L, BigDecimal.valueOf(15.00));
+        Long productId2 = thereIsProduct(20L, BigDecimal.valueOf(6.00));
 
         sales.addToCart(customerId, productId1, 1);
         sales.addToCart(customerId, productId2, 1);
@@ -105,7 +105,7 @@ public class CollectingProductsTest {
     void customersManageTheirOwnCarts() throws ProductNotAvailableException {
         String customerId1 = thereIsCustomer("Kuba");
         String customerId2 = thereIsCustomer("Maciek");
-        String productId = thereIsProduct("Lego set", BigDecimal.TEN);
+        Long productId = thereIsProduct(123L, BigDecimal.TEN);
 
         sales.addToCart(customerId1, productId, 1);
         Offer offer1 = sales.getCurrentOffer(customerId1);
@@ -120,7 +120,7 @@ public class CollectingProductsTest {
         return customerId;
     }
 
-    private String thereIsProduct(String id, BigDecimal price) {
+    private Long thereIsProduct(Long id, BigDecimal price) {
 
         productDetails.add(
                 new ProductDetails(id, "product-"+id, price)

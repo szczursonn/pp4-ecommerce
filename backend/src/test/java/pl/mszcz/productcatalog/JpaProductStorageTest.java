@@ -26,10 +26,11 @@ public class JpaProductStorageTest {
 
     @Test
     void itStoresAndLoadsProduct() {
-        ProductData data = thereIsProduct("lego-set-1");
+        ProductData data = thereIsProduct(1L);
 
         productStorage.save(data);
-        ProductData loaded = productStorage.load(data.getId());
+        ProductData loaded = productStorage.load(data.getId())
+                .orElseThrow();
 
         assertEquals(data.getId(), loaded.getId());
     }
@@ -37,8 +38,8 @@ public class JpaProductStorageTest {
     @Test
     void itLoadsAllPublishedProducts() {
 
-        ProductData data1 = thereIsProduct("lego-set-1");
-        ProductData data2 = thereIsProduct("lego-set-2");
+        ProductData data1 = thereIsProduct(1L);
+        ProductData data2 = thereIsProduct(2L);
         data1.setPublished(true);
 
         productStorage.save(data1);
@@ -47,7 +48,7 @@ public class JpaProductStorageTest {
         assertEquals(1, productStorage.allPublished().size());
     }
 
-    private ProductData thereIsProduct(String productId) {
-        return new ProductData(productId, "product-"+productId);
+    private ProductData thereIsProduct(Long productId) {
+        return productStorage.save(new ProductData(productId, "product-"+productId));
     }
 }

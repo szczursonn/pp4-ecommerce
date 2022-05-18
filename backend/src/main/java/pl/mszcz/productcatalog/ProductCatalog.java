@@ -12,18 +12,18 @@ public class ProductCatalog {
         this.productStorage = productStorage;
     }
 
-    public String addProduct(String productId, String name) {
-        ProductData newProduct = new ProductData(productId, name);
-        this.productStorage.save(newProduct);
+    public ProductData addProduct(String name) {
+        ProductData product = new ProductData();
+        product.setName(name);
 
-        return productId;
+        return productStorage.save(product);
     }
 
-    public Optional<ProductData> getProductById(String productId) {
-        return Optional.ofNullable(this.productStorage.load(productId));
+    public Optional<ProductData> getProductById(Long productId) {
+        return this.productStorage.load(productId);
     }
 
-    public void publishProduct(String productId) throws CantPublishProductException {
+    public void publishProduct(Long productId) throws CantPublishProductException {
         ProductData product = this.getProductById(productId)
                 .orElseThrow(CantPublishProductException::new);
 
@@ -48,24 +48,18 @@ public class ProductCatalog {
         return this.productStorage.allPublished();
     }
 
-    public void setPrice(String productId, BigDecimal price) {
-        ProductData product = productStorage.load(productId);
-
-        if (product == null) {
-            throw new InvalidProductIdException();
-        }
+    public void setPrice(Long productId, BigDecimal price) {
+        ProductData product = productStorage.load(productId)
+                .orElseThrow(InvalidProductIdException::new);
 
         product.setPrice(price);
 
         productStorage.save(product);
     }
 
-    public void setImageUrl(String productId, String imageUrl) {
-        ProductData product = productStorage.load(productId);
-
-        if (product == null) {
-            throw new InvalidProductIdException();
-        }
+    public void setImageUrl(Long productId, String imageUrl) {
+        ProductData product = productStorage.load(productId)
+                .orElseThrow(InvalidProductIdException::new);
 
         product.setImageUrl(imageUrl);
 

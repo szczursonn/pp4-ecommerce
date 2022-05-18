@@ -3,6 +3,7 @@ package pl.mszcz.productcatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 public class JpaProductStorage implements ProductStorage {
 
@@ -10,13 +11,13 @@ public class JpaProductStorage implements ProductStorage {
     private ProductDataRepository repo;
 
     @Override
-    public void save(ProductData newProduct) {
-        repo.save(newProduct);
+    public ProductData save(ProductData newProduct) {
+        return repo.save(newProduct);
     }
 
     @Override
-    public ProductData load(String productId) {
-        return repo.getById(productId);
+    public Optional<ProductData> load(Long productId) {
+        return repo.findById(productId);
     }
 
     @Override

@@ -3,23 +3,25 @@ package pl.mszcz.productcatalog;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MapProductStorage implements ProductStorage {
-    private final Map<String, ProductData> products;
+    private final Map<Long, ProductData> products;
 
     public MapProductStorage() {
         this.products = new HashMap<>();
     }
 
     @Override
-    public ProductData load(String productId) {
-        return this.products.get(productId);
+    public Optional<ProductData> load(Long productId) {
+        return Optional.ofNullable(this.products.get(productId));
     }
 
     @Override
-    public void save(ProductData product) {
+    public ProductData save(ProductData product) {
         this.products.put(product.getId(), product);
+        return product;
     }
 
     @Override

@@ -3,21 +3,21 @@ package pl.mszcz.sales;
 import java.math.BigDecimal;
 
 public class CartItem {
-    private String productId;
+    private Long productId;
     private String name;
     private BigDecimal price;
     private Integer quantity;
 
     private CartItem() {}
 
-    public CartItem(String productId, String name, BigDecimal price, Integer quantity) {
+    public CartItem(Long productId, String name, BigDecimal price, Integer quantity) {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
     }
 
-    public String getProductId() {
+    public Long getProductId() {
         return productId;
     }
 

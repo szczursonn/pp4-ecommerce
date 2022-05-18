@@ -1,27 +1,31 @@
 package pl.mszcz.productcatalog;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
 public class ProductData {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String name;
     private BigDecimal price;
     private String imageUrl;
     private boolean published;
 
+    // constructor for JPA
     public ProductData() {}
 
-    public ProductData(String productId, String productName) {
+    public ProductData(Long productId, String productName) {
         this.id = productId;
         this.name = productName;
         this.published = false;
     }
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -39,6 +43,10 @@ public class ProductData {
 
     public boolean isPublished() {
         return this.published;
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
     }
 
     public void setPrice(BigDecimal newPrice) {

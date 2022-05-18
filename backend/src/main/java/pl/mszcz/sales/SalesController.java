@@ -22,8 +22,7 @@ public class SalesController {
     }
 
     @PostMapping("/api/sales/offer/{productId}")
-    void addToCart(@PathVariable String productId, @RequestParam Optional<Integer> quantity) {
-
+    void addToCart(@PathVariable Long productId, @RequestParam Optional<Integer> quantity) {
         try {
             sales.addToCart(getCurrentCustomerId(), productId, quantity.orElse(1));
         } catch (ProductNotAvailableException e) {
@@ -33,7 +32,7 @@ public class SalesController {
     }
 
     @DeleteMapping("/api/sales/offer/{productId}")
-    void removeFromCart(@PathVariable String productId) {
+    void removeFromCart(@PathVariable Long productId) {
         try {
             sales.removeFromCart(getCurrentCustomerId(), productId);
         } catch (ProductNotAvailableException e) {

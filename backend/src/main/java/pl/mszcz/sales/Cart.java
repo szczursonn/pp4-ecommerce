@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Cart {
-    private Map<String, CartItem> items;
+    private Map<Long, CartItem> items;
 
     public Cart() {
         this.items = new HashMap<>();
@@ -30,7 +30,7 @@ public class Cart {
         items.put(cartItem.getProductId(), cartItem);
     }
 
-    public String remove(String productId) {
+    public Long remove(Long productId) {
         CartItem item = items.remove(productId);
         if (item == null) return null;
         return productId;

@@ -12,7 +12,7 @@ public class RealProductDetailsProvider implements ProductDetailsProvider {
         this.catalog = catalog;
     }
 
-    public Optional<ProductDetails> findById(String productId) {
+    public Optional<ProductDetails> findById(Long productId) {
         ProductData productData = catalog.getProductById(productId)
                 .orElse(null);
 
