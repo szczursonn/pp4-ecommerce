@@ -1,42 +1,39 @@
 package pl.mszcz.sales;
 
+import pl.mszcz.productcatalog.ProductData;
+
 public class Sales {
 
-    CartStorage cartStorage;
-    ProductDetailsProvider productDetailsProvider;
+    private CartItemStorage cartItemStorage;
+    private ProductDetailsProvider productDetailsProvider;
 
-    public Sales(CartStorage cartStorage, ProductDetailsProvider productDetailsProvider) {
-        this.cartStorage = cartStorage;
+    public Sales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage) {
         this.productDetailsProvider = productDetailsProvider;
+        this.cartItemStorage = cartItemStorage;
+    }
+
+    private Cart getCustomerCart(String customerId) {
+        return new Cart(customerId, cartItemStorage);
     }
 
     public Offer getCurrentOffer(String customerId) {
-        Cart cart = cartStorage.getForCustomer(customerId)
-                .orElse(Cart.empty());
+        Cart cart = getCustomerCart(customerId);
 
         return cart.getOffer();
     }
 
     public void addToCart(String customerId, Long productId, int quantity) throws ProductNotAvailableException {
-        Cart cart = cartStorage.getForCustomer(customerId)
-                .orElse(Cart.empty());
+        Cart cart = getCustomerCart(customerId);
 
-        ProductDetails details = productDetailsProvider.findById(productId)
+        ProductData product = productDetailsProvider.findById(productId)
                 .orElseThrow(ProductNotAvailableException::new);
 
-        cart.add(new CartItem(productId, details.getName(), details.getPrice(), quantity));
-
-        cartStorage.save(customerId, cart);
+        cart.add(new CartItem(customerId, product, quantity));
     }
 
-    public void removeFromCart(String customerId, Long productId) throws ProductNotAvailableException {
-        Cart cart = cartStorage.getForCustomer(customerId)
-                .orElse(Cart.empty());
+    public void removeFromCart(String customerId, Long productId) {
+        Cart cart = getCustomerCart(customerId);
 
-        Long id = cart.remove(productId);
-
-        if (id == null) throw new ProductNotAvailableException();
-
-        cartStorage.save(customerId, cart);
+        cart.remove(productId);
     }
 }

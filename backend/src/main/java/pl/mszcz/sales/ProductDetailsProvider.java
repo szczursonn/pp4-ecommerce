@@ -1,7 +1,9 @@
 package pl.mszcz.sales;
 
+import pl.mszcz.productcatalog.ProductData;
+
 import java.util.Optional;
 
 public interface ProductDetailsProvider {
-    Optional<ProductDetails> findById(Long productId);
+    Optional<ProductData> findById(Long productId);
 }

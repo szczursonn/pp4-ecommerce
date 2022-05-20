@@ -1,32 +1,43 @@
 package pl.mszcz.sales;
 
-import java.math.BigDecimal;
+import pl.mszcz.productcatalog.ProductData;
 
+import javax.persistence.*;
+
+@Entity
+@IdClass(CartItemId.class)
 public class CartItem {
+    @Id
+    private String customerId;
+
+    @Id
     private Long productId;
-    private String name;
-    private BigDecimal price;
+
+    @ManyToOne
+    @MapsId
+    @JoinColumn(name = "productId", nullable = false)
+    private ProductData product;
     private Integer quantity;
 
     private CartItem() {}
 
-    public CartItem(Long productId, String name, BigDecimal price, Integer quantity) {
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
+    public CartItem(String customerId, ProductData product, Integer quantity) {
+        this.customerId = customerId;
+        this.product = product;
+        this.productId = product.getId();
         this.quantity = quantity;
     }
 
-    public Long getProductId() {
-        return productId;
+    public ProductData getProduct() {
+        return product;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public void setProduct(ProductData product) {
+        this.product = product;
     }
 
     public Integer getQuantity() {

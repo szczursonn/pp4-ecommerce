@@ -35,7 +35,7 @@ public class SalesController {
     void removeFromCart(@PathVariable Long productId) {
         try {
             sales.removeFromCart(getCurrentCustomerId(), productId);
-        } catch (ProductNotAvailableException e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not in cart");
         }
 

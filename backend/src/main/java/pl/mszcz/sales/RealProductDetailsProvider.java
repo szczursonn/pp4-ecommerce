@@ -12,12 +12,7 @@ public class RealProductDetailsProvider implements ProductDetailsProvider {
         this.catalog = catalog;
     }
 
-    public Optional<ProductDetails> findById(Long productId) {
-        ProductData productData = catalog.getProductById(productId)
-                .orElse(null);
-
-        if (productData == null) return Optional.empty();
-
-        return Optional.of(new ProductDetails(productId, productData.getName(), productData.getPrice()));
+    public Optional<ProductData> findById(Long productId) {
+        return catalog.getProductById(productId);
     };
 }

@@ -17,7 +17,7 @@ public class Offer {
         this.items = items;
         this.total = items
                 .stream()
-                .map(item->item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .map(item->item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
         this.size = items.size();

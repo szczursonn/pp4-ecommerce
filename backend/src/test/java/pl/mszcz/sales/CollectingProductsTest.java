@@ -2,6 +2,7 @@ package pl.mszcz.sales;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pl.mszcz.productcatalog.ProductData;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,15 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CollectingProductsTest {
 
-    CartStorage cartStorage;
     Sales sales;
-    ArrayList<ProductDetails> productDetails;
+    ArrayList<ProductData> productDetails;
 
     @BeforeEach
     void setup() {
-        cartStorage = new MapCartStorage();
         productDetails = new ArrayList<>();
-        sales = new Sales(cartStorage, new ListProductDetailsProvider(productDetails));
+        sales = new Sales(new ListProductDetailsProvider(productDetails), new MapCartItemStorage());
     }
 
     @Test
@@ -122,9 +121,10 @@ public class CollectingProductsTest {
 
     private Long thereIsProduct(Long id, BigDecimal price) {
 
-        productDetails.add(
-                new ProductDetails(id, "product-"+id, price)
-        );
+        ProductData product = new ProductData(id, "product-"+id);
+        product.setPrice(price);
+
+        productDetails.add(product);
 
         return id;
     }

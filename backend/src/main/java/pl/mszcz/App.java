@@ -8,7 +8,6 @@ import pl.mszcz.productcatalog.*;
 import pl.mszcz.sales.*;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @SpringBootApplication
 public class App {
@@ -33,7 +32,21 @@ public class App {
         createDefaultProducts(productCatalog);
 
         return productCatalog;
+    }
 
+    @Bean
+    ProductDetailsProvider detailsProvider(ProductCatalog catalog) {
+        return new RealProductDetailsProvider(catalog);
+    }
+
+    @Bean
+    Sales createSales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage) {
+        return new Sales(productDetailsProvider, cartItemStorage);
+    }
+
+    @Bean
+    CartItemStorage createCartItemStorage() {
+        return new JpaCartItemStorage();
     }
 
     private void createDefaultProducts(ProductCatalog productCatalog) {
@@ -52,18 +65,4 @@ public class App {
         }
     }
 
-    @Bean
-    ProductDetailsProvider detailsProvider(ProductCatalog catalog) {
-        return new RealProductDetailsProvider(catalog);
-    }
-
-    @Bean
-    Sales createSales(ProductDetailsProvider productDetailsProvider) {
-        return new Sales(new MapCartStorage(), productDetailsProvider);
-    }
-
-    @Bean
-    CartStorage createCartStorage() {
-        return new MapCartStorage();
-    }
 }
