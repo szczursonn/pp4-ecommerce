@@ -1,45 +1,40 @@
-import { useEffect, useState } from 'react';
 import './Home.scss'
 import { ProductData, validateProduct } from '../types/ProductData';
 import { ProductCard } from './ProductCard';
+import { useQuery, useQueryClient } from 'react-query';
+import { useEffect } from 'react';
 
 const Home = () => {
 
-    const [products, setProducts] = useState<ProductData[]>([])
-    const [error, setError] = useState<string | null>(null)
-    const [loading, setLoading] = useState(false)
+    const queryClient = useQueryClient()
 
-    const fetchProducts = async () => {
-        setLoading(true)
-
-        try {
+    const { data: products, error, isLoading } = useQuery('products', async () => {
             const res = await fetch('http://localhost:8080/api/products')
             if (!res.ok) throw new TypeError(res.statusText)
             const data = await res.json()
             if (!(data instanceof Array) || !data.every(validateProduct)) throw new Error('Response validation failed')
-            setProducts(data)
-        } catch (err) {
-            if (err instanceof TypeError) {
-                console.error(`Failed to fetch: ${err}`)
-            } else if (err instanceof SyntaxError) {
-                console.error(`Failed to parse JSON: ${err}`)
+            return data as ProductData[]
+        }, {
+            staleTime: Infinity
+        }
+    )
+    
+    useEffect(()=>{
+        if (error) {
+            if (error instanceof TypeError) {
+                console.error(`Failed to fetch: ${error}`)
+            } else if (error instanceof SyntaxError) {
+                console.error(`Failed to parse JSON: ${error}`)
             } else {
                 console.error(`Failed to validate products`)
             }
-            setError('Failed to load products')
         }
-        
-        setLoading(false)
-    }
-
-    useEffect(()=>{
-        fetchProducts()
-    }, [])
+    }, [error])
 
     return <div className="Home">
-        <button onClick={fetchProducts}>load products</button>
+        <button onClick={()=>queryClient.invalidateQueries('products')}>load products</button>
         {
-            loading ?
+            isLoading ?
                 <p>
                     loading...
                 </p>
@@ -47,11 +42,11 @@ const Home = () => {
                 <>
                     {error ?
                         <p>
-                            {error}
+                            'Failed to load products'
                         </p>
                     :
                         <div className='products-container'>
-                            {products.map(product=><ProductCard key={`product-${product.id}`} product={product}/>)}
+                            {products!.map(product=><ProductCard key={`product-${product.id}`} product={product}/>)}
                         </div>
                     }
                 </>
