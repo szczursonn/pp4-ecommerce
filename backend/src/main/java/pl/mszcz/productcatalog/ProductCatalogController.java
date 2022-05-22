@@ -1,7 +1,10 @@
 package pl.mszcz.productcatalog;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -16,5 +19,11 @@ public class ProductCatalogController {
     @GetMapping("/api/products")
     List<ProductData> products() {
         return this.catalog.getPublishedProducts();
+    }
+
+    @GetMapping("/api/products/{id}")
+    ProductData product(@PathVariable Long id) {
+        return this.catalog.getProductById(id)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }
