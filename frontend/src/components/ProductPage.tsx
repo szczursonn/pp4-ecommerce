@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useQuery } from "react-query"
+import { useQuery, useQueryClient } from "react-query"
 import { useParams } from "react-router-dom"
 import { ProductData, validateProduct } from "../types/ProductData"
 
@@ -7,6 +7,8 @@ export const ProductPage = () => {
 
     const [quantity, setQuantity] = useState(1)
     const { id } = useParams()
+    const queryClient = useQueryClient()
+    const [success, setSuccess] = useState(false)
 
     const { data: product, error, isLoading } = useQuery(`product-${id}`, async () => {
             const res = await fetch(`http://localhost:8080/api/products/${id}`)
@@ -22,7 +24,12 @@ export const ProductPage = () => {
     const addToCart = () => {
         fetch(`http://localhost:8080/api/sales/offer/${id}?quantity=${quantity}`, {
             method: 'POST'
-        }).catch(()=>{})
+        })
+        .then(()=>{
+            setSuccess(true)
+            queryClient.invalidateQueries('offer')
+        })
+        .catch(()=>{})
     }
 
     const updateQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +55,7 @@ export const ProductPage = () => {
                             <p>{product!.price?.toFixed(2)} zł</p>
                             <input type='number' min={1} max={99} value={quantity} autoComplete='off' onChange={updateQuantity}></input>
                             <button onClick={addToCart}>add to cart</button>
+                            {success && <p>✔️</p>}
                         </div>
                     }
                 </>

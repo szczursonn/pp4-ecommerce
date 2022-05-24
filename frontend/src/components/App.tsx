@@ -2,8 +2,8 @@ import './App.scss';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Home';
 import Navbar from './Navbar';
-import Placeholder from './Placeholder';
 import { ProductPage } from './ProductPage';
+import CartPage from './CartPage';
 
 const App = () => {
   return (
@@ -12,7 +12,7 @@ const App = () => {
       <main className='content-container'>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/cart' element={<Placeholder />} />
+          <Route path='/cart' element={<CartPage />} />
           <Route path='/products/:id' element={<ProductPage />} />
         </Routes>
       </main>
