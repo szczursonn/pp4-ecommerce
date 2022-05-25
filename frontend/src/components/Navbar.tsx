@@ -9,8 +9,7 @@ const Navbar = () => {
     return <div className='Navbar'>
         <nav className='row'>
             <img className='shoplogo' src={shopLogo} alt='Shop logo' onClick={()=>navigate('/')} />
-            <input type='text'></input>
-            <Link to='/cart'>Cart</Link>
+            <Link className='cart-link' to='/cart'>🛒</Link>
         </nav>
         <div className='divider' />
     </div>

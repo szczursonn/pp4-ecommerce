@@ -2,6 +2,8 @@ import React, { useState } from "react"
 import { useQuery, useQueryClient } from "react-query"
 import { useParams } from "react-router-dom"
 import { ProductData, validateProduct } from "../types/ProductData"
+import Price from "./Price"
+import './ProductPage.scss'
 
 export const ProductPage = () => {
 
@@ -38,8 +40,7 @@ export const ProductPage = () => {
         setQuantity(value)
     }
 
-    return <div>
-        <p>Placeholder, id: {id}</p>
+    return <div className="ProductPage">
         {
             isLoading ? 
                 <p>loading...</p>
@@ -49,13 +50,19 @@ export const ProductPage = () => {
                     error ?
                         <p>Error loading product</p>
                     :
-                        <div>
-                            <img src={product!.imageUrl!} alt={product!.name}/>
-                            <p>{product!.name}</p>
-                            <p>{product!.price?.toFixed(2)} zł</p>
-                            <input type='number' min={1} max={99} value={quantity} autoComplete='off' onChange={updateQuantity}></input>
-                            <button onClick={addToCart}>add to cart</button>
-                            {success && <p>✔️</p>}
+                        <div className="product-container">
+                            <div className="image-container">
+                                <img className="image" src={product!.imageUrl || ''} alt={product!.name} onError={e=>e.currentTarget.src='/logo512.png'}/>
+                            </div>
+                            <div className="info-container">
+                                <p className="name">{product!.name}</p>
+                                <Price price={product!.price}/>
+                                <div>
+                                    <input type='number' min={1} max={99} value={quantity} autoComplete='off' onChange={updateQuantity}></input>
+                                    <button onClick={addToCart}>add to cart</button>
+                                    {success && <p>✔️</p>}
+                                </div>
+                            </div>
                         </div>
                     }
                 </>

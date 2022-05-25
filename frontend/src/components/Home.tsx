@@ -32,7 +32,6 @@ const Home = () => {
     }, [error])
 
     return <div className="Home">
-        <button onClick={()=>queryClient.invalidateQueries('products')}>load products</button>
         {
             isLoading ?
                 <p>
@@ -41,9 +40,12 @@ const Home = () => {
             :
                 <>
                     {error ?
-                        <p>
-                            'Failed to load products'
-                        </p>
+                        <>
+                            <p> 
+                                'Failed to load products'
+                            </p>
+                            <button onClick={()=>queryClient.invalidateQueries('products')}>load products</button>
+                        </>
                     :
                         <div className='products-container'>
                             {products!.map(product=><ProductCard key={`product-${product.id}`} product={product}/>)}

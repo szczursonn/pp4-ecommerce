@@ -1,0 +1,12 @@
+.Price {
+    font-weight:bold;
+    .major {
+        font-size: 2rem;
+    }
+    .minor {
+        font-size: 1.4rem;
+    }
+    .unavailable {
+        font-size: 1.5rem;
+    }
+}

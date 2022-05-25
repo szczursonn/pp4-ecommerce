@@ -1,50 +1,52 @@
 .ProductCard {
-    display: flex;
-    flex-direction: column;
-    border-style: solid;
-    border-width: 4px;
-    border-color: black;
-    border-radius: 15px;
-    margin: 12px;
-    padding: 12px;
-    background-color: darken($color: #282c34, $amount: 2);
-    width: 200px;
-    height: 300px;
-    &:hover {
-        cursor: pointer;
-        .info-container .name {
-            color: hotpink;
-        }
+    flex-basis: 100%;
+    max-width: 100%;
+    @media (min-width: 550px) {
+        flex-basis: 50%;
+        max-width: 50%;
     }
-    .image-container {
-        background-color: darken($color: #282c34, $amount: 3);
-        .image {
-            width: 200px;
-            height: 200px;
-            object-fit: scale-down;
-        }
+    @media (min-width: 750px) {
+        flex-basis: 33.33%;
+        max-width: 33.33%;
     }
-    .info-container {
+    @media (min-width: 1300px) {
+        flex-basis: 25%;
+        max-width: 25%;
+    }
+    @media (min-width: 1700px) {
+        flex-basis: 16.66%;
+        max-width: 16.66%;
+    }
+    box-sizing: border-box;
+    .inner {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        text-align: left;
-        .price-container {
-            font-weight:bold;
-            .major {
-                font-size: 28px;
-            }
-            .minor {
-                font-size: 18px;
-            }
-            .unavailable {
-                font-size: 20px;
+        margin: 12px;
+        &:hover {
+            cursor: pointer;
+            .info-container .name {
+                color: hotpink;
             }
         }
-        .name {
-            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            font-size: 16px;
+        color: #fff;
+        .image-container {
+            background-color: darken($color: #282c34, $amount: 2);
+            .image {
+                width: 200px;
+                height: 200px;
+                object-fit: scale-down;
+            }
+        }
+        .info-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: left;
+            .name {
+                font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+                font-size: 1rem;
+            }
         }
     }
 }
