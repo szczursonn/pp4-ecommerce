@@ -32,6 +32,7 @@ const Home = () => {
     }, [error])
 
     return <div className="Home">
+        <p className='products-title'>PRODUKTY</p>
         {
             isLoading ?
                 <p>
@@ -42,7 +43,7 @@ const Home = () => {
                     {error ?
                         <>
                             <p> 
-                                'Failed to load products'
+                                Failed to load products
                             </p>
                             <button onClick={()=>queryClient.invalidateQueries('products')}>load products</button>
                         </>

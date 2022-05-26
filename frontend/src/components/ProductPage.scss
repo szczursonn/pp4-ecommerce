@@ -4,8 +4,9 @@
         justify-content: center;
         flex-direction: row;
         background-color: #282c34;
-        margin: 0 10vw;
-        padding: 5vh 5vw;
+        margin: 0 25vw;
+        margin-top: 50px;
+        padding: 40px;
         .image-container {
             background-color: darken($color: #282c34, $amount: 2);
             .image {
