@@ -8,9 +8,10 @@ import './ProductPage.scss'
 export const ProductPage = () => {
 
     const [quantity, setQuantity] = useState(1)
+    const [success, setSuccess] = useState(false)
+    const [adding, setAdding] = useState(false)
     const { id } = useParams()
     const queryClient = useQueryClient()
-    const [success, setSuccess] = useState(false)
 
     const { data: product, error, isLoading } = useQuery(`product-${id}`, async () => {
             const res = await fetch(`http://localhost:8080/api/products/${id}`)
@@ -24,6 +25,8 @@ export const ProductPage = () => {
     )
 
     const addToCart = () => {
+        setAdding(true)
+        setSuccess(false)
         fetch(`http://localhost:8080/api/sales/offer/${id}?quantity=${quantity}`, {
             method: 'POST'
         })
@@ -32,6 +35,9 @@ export const ProductPage = () => {
             queryClient.invalidateQueries('offer')
         })
         .catch(()=>{})
+        .finally(()=>{
+            setAdding(false)
+        })
     }
 
     const updateQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,9 +63,13 @@ export const ProductPage = () => {
                             <div className="info-container">
                                 <p className="name">{product!.name}</p>
                                 <Price price={product!.price}/>
-                                <div>
-                                    <input type='number' min={1} max={99} value={quantity} autoComplete='off' onChange={updateQuantity}></input>
-                                    <button onClick={addToCart}>add to cart</button>
+                                <div className="controls">
+                                    <div className="quantity">
+                                        <button className="quantity-alter-button" onClick={()=>setQuantity(quantity-1)} disabled={quantity <= 1}>-</button>
+                                        <input className="quantity-input" type='number' min={1} max={99} value={quantity} autoComplete='off' onChange={updateQuantity}></input>
+                                        <button className="quantity-alter-button" onClick={()=>setQuantity(quantity+1)} disabled={quantity >= 99}>+</button>
+                                    </div>
+                                    <button className="add-to-cart-button" onClick={addToCart} disabled={adding}>ADD TO CART</button>
                                     {success && <p>✔️</p>}
                                 </div>
                             </div>
