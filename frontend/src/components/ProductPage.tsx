@@ -5,6 +5,12 @@ import { ProductData, validateProduct } from "../types/ProductData"
 import Price from "./Price"
 import './ProductPage.scss'
 
+const toRealId = (fakeId: string): string => {
+    const x = fakeId.split('-')
+    return x[x.length-1]
+}
+const toFakeId = (id: string, name: string): string => encodeURIComponent(name.toLowerCase().replace(/ /g, '-')) + '-' + id
+
 export const ProductPage = () => {
 
     const [quantity, setQuantity] = useState(1)
@@ -13,11 +19,14 @@ export const ProductPage = () => {
     const { id } = useParams()
     const queryClient = useQueryClient()
 
-    const { data: product, error, isLoading } = useQuery(`product-${id}`, async () => {
-            const res = await fetch(`http://localhost:8080/api/products/${id}`)
+    const realId = toRealId(id || '')
+
+    const { data: product, error, isLoading } = useQuery(`product-${realId}`, async () => {
+            const res = await fetch(`http://localhost:8080/api/products/${realId}`)
             if (!res.ok) throw new TypeError(res.statusText)
             const data = await res.json()
             if (!validateProduct(data)) throw new Error('Response validation failed')
+            window.history.replaceState(null, '', `/products/${toFakeId(data.id, data.name)}`)
             return data as ProductData
         }, {
             staleTime: Infinity
@@ -27,7 +36,7 @@ export const ProductPage = () => {
     const addToCart = () => {
         setAdding(true)
         setSuccess(false)
-        fetch(`http://localhost:8080/api/sales/offer/${id}?quantity=${quantity}`, {
+        fetch(`http://localhost:8080/api/sales/offer/${realId}?quantity=${quantity}`, {
             method: 'POST'
         })
         .then(()=>{
