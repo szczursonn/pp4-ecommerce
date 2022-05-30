@@ -1,4 +1,4 @@
-package pl.mszcz.sales;
+package pl.mszcz.sales.cart;
 
 public class Cart {
     private CartItemStorage cartItemStorage;

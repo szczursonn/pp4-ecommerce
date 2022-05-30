@@ -2,6 +2,9 @@ package pl.mszcz.sales;
 
 import org.junit.jupiter.api.Test;
 import pl.mszcz.productcatalog.ProductData;
+import pl.mszcz.sales.cart.CartItem;
+import pl.mszcz.sales.cart.CartItemStorage;
+import pl.mszcz.sales.cart.MapCartItemStorage;
 
 import static org.junit.jupiter.api.Assertions.*;
 

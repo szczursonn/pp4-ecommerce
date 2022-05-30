@@ -10,8 +10,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import pl.mszcz.productcatalog.CantPublishProductException;
+import pl.mszcz.productcatalog.exceptions.CantPublishProductException;
 import pl.mszcz.productcatalog.ProductCatalog;
+import pl.mszcz.sales.cart.Offer;
 
 import java.math.BigDecimal;
 

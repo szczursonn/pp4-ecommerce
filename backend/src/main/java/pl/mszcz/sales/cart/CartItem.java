@@ -1,4 +1,4 @@
-package pl.mszcz.sales;
+package pl.mszcz.sales.cart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import pl.mszcz.productcatalog.ProductData;

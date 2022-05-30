@@ -1,6 +1,7 @@
-package pl.mszcz.sales;
+package pl.mszcz.sales.purchase;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import pl.mszcz.sales.purchase.Purchase;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -29,6 +30,10 @@ public class PurchaseItem {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    public Long getId() {
+        return this.id;
     }
 
     public Purchase getPurchase() {

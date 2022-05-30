@@ -1,4 +1,4 @@
-package pl.mszcz.sales;
+package pl.mszcz.sales.exceptions;
 
 public class ProductNotAvailableException extends Exception {
 }

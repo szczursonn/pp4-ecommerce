@@ -5,7 +5,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import pl.mszcz.ecommerce.NameProvider;
 import pl.mszcz.productcatalog.*;
+import pl.mszcz.productcatalog.exceptions.CantPublishProductException;
 import pl.mszcz.sales.*;
+import pl.mszcz.sales.cart.CartItemStorage;
+import pl.mszcz.sales.cart.JpaCartItemStorage;
+import pl.mszcz.sales.purchase.DummyPaymentGateway;
+import pl.mszcz.sales.purchase.JpaPurchaseStorage;
+import pl.mszcz.sales.purchase.PaymentGateway;
+import pl.mszcz.sales.purchase.PurchaseStorage;
 
 import java.math.BigDecimal;
 
@@ -40,8 +47,8 @@ public class App {
     }
 
     @Bean
-    Sales createSales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage, PurchaseStorage purchaseStorage) {
-        return new Sales(productDetailsProvider, cartItemStorage, purchaseStorage);
+    Sales createSales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage, PurchaseStorage purchaseStorage, PaymentGateway paymentGateway) {
+        return new Sales(productDetailsProvider, cartItemStorage, purchaseStorage, paymentGateway);
     }
 
     @Bean
@@ -52,6 +59,11 @@ public class App {
     @Bean
     PurchaseStorage createPurchaseStorage() {
         return new JpaPurchaseStorage();
+    }
+
+    @Bean
+    PaymentGateway createPaymentGateway() {
+        return new DummyPaymentGateway();
     }
 
     private void createDefaultProducts(ProductCatalog productCatalog) {

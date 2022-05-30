@@ -3,6 +3,11 @@ package pl.mszcz.sales;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pl.mszcz.sales.cart.Offer;
+import pl.mszcz.sales.exceptions.EmptyPurchaseException;
+import pl.mszcz.sales.exceptions.ProductNotAvailableException;
+import pl.mszcz.sales.purchase.CustomerInfo;
+import pl.mszcz.sales.purchase.PaymentData;
 
 import java.util.Optional;
 
@@ -40,9 +45,14 @@ public class SalesController {
         }
     }
 
-    @GetMapping("/api/sales/purchase")
-    Purchase getCurrentPurchase() {
-        return sales.createPurchase(getCurrentCustomerId());
+    @PostMapping("/api/sales/purchase") // Returns a payment url
+    PaymentData createPurchase(@RequestBody CustomerInfo customerInfo) {
+        try {
+            PaymentData paymentData = sales.createPurchase(getCurrentCustomerId(), customerInfo);
+            return paymentData;
+        } catch (EmptyPurchaseException ex) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Offer is empty");
+        }
     }
 
     private String getCurrentCustomerId() {

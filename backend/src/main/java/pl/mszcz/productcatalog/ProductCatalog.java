@@ -1,5 +1,8 @@
 package pl.mszcz.productcatalog;
 
+import pl.mszcz.productcatalog.exceptions.CantPublishProductException;
+import pl.mszcz.productcatalog.exceptions.InvalidProductIdException;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;

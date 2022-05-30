@@ -1,6 +1,7 @@
 package pl.mszcz.productcatalog;
 
 import org.junit.jupiter.api.Test;
+import pl.mszcz.productcatalog.exceptions.CantPublishProductException;
 
 import java.math.BigDecimal;
 import java.util.List;

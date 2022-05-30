@@ -1,6 +1,10 @@
-package pl.mszcz.sales;
+package pl.mszcz.sales.cart;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.mszcz.sales.cart.CartItem;
+import pl.mszcz.sales.cart.CartItemId;
+import pl.mszcz.sales.cart.CartItemRepository;
+import pl.mszcz.sales.cart.CartItemStorage;
 
 import java.util.List;
 

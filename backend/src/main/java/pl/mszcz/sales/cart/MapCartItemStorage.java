@@ -1,4 +1,7 @@
-package pl.mszcz.sales;
+package pl.mszcz.sales.cart;
+
+import pl.mszcz.sales.cart.CartItem;
+import pl.mszcz.sales.cart.CartItemStorage;
 
 import java.util.ArrayList;
 import java.util.List;

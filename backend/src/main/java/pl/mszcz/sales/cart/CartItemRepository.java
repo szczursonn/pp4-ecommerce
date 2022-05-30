@@ -1,6 +1,8 @@
-package pl.mszcz.sales;
+package pl.mszcz.sales.cart;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import pl.mszcz.sales.cart.CartItem;
+import pl.mszcz.sales.cart.CartItemId;
 
 import java.util.List;
 

@@ -3,6 +3,11 @@ package pl.mszcz.sales;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.mszcz.productcatalog.ProductData;
+import pl.mszcz.sales.cart.MapCartItemStorage;
+import pl.mszcz.sales.cart.Offer;
+import pl.mszcz.sales.exceptions.ProductNotAvailableException;
+import pl.mszcz.sales.purchase.DummyPaymentGateway;
+import pl.mszcz.sales.purchase.MapPurchaseStorage;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,7 +22,11 @@ public class CollectingProductsTest {
     @BeforeEach
     void setup() {
         productDetails = new ArrayList<>();
-        sales = new Sales(new ListProductDetailsProvider(productDetails), new MapCartItemStorage(), null);  //TODO: fix tests
+        sales = new Sales(
+                new ListProductDetailsProvider(productDetails),
+                new MapCartItemStorage(),
+                new MapPurchaseStorage(),
+                new DummyPaymentGateway());
     }
 
     @Test

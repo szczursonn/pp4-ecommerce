@@ -1,6 +1,13 @@
 package pl.mszcz.sales;
 
 import pl.mszcz.productcatalog.ProductData;
+import pl.mszcz.sales.cart.Cart;
+import pl.mszcz.sales.cart.CartItem;
+import pl.mszcz.sales.cart.CartItemStorage;
+import pl.mszcz.sales.cart.Offer;
+import pl.mszcz.sales.exceptions.EmptyPurchaseException;
+import pl.mszcz.sales.exceptions.ProductNotAvailableException;
+import pl.mszcz.sales.purchase.*;
 
 import java.util.ArrayList;
 
@@ -9,11 +16,13 @@ public class Sales {
     private CartItemStorage cartItemStorage;
     private ProductDetailsProvider productDetailsProvider;
     private PurchaseStorage purchaseStorage;
+    private PaymentGateway paymentGateway;
 
-    public Sales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage, PurchaseStorage purchaseStorage) {
+    public Sales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage, PurchaseStorage purchaseStorage, PaymentGateway paymentGateway) {
         this.productDetailsProvider = productDetailsProvider;
         this.cartItemStorage = cartItemStorage;
         this.purchaseStorage = purchaseStorage;
+        this.paymentGateway = paymentGateway;
     }
 
     private Cart getCustomerCart(String customerId) {
@@ -41,10 +50,14 @@ public class Sales {
         cart.remove(productId);
     }
 
-    public Purchase createPurchase(String customerId) {
+    public PaymentData createPurchase(String customerId, CustomerInfo customerInfo) throws EmptyPurchaseException {
         Cart cart = getCustomerCart(customerId);
 
-        Purchase purchase = new Purchase(null, customerId, new ArrayList<>());
+        if (cart.getOffer().getItemsCount() == 0) {
+            throw new EmptyPurchaseException();
+        }
+
+        Purchase purchase = new Purchase(null, new ArrayList<>(), customerId, customerInfo);
 
         cart
                 .getOffer()
@@ -56,6 +69,10 @@ public class Sales {
                         )
                 );
 
-        return purchaseStorage.save(purchase);
+        PaymentData paymentData = purchase.registerPayment(paymentGateway);
+
+        purchaseStorage.save(purchase);
+
+        return paymentData;
     }
 }

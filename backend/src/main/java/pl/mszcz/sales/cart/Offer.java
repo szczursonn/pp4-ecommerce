@@ -1,4 +1,6 @@
-package pl.mszcz.sales;
+package pl.mszcz.sales.cart;
+
+import pl.mszcz.sales.cart.CartItem;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

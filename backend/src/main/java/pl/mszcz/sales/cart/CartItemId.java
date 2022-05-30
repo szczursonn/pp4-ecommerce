@@ -1,4 +1,4 @@
-package pl.mszcz.sales;
+package pl.mszcz.sales.cart;
 
 import java.io.Serializable;
 
