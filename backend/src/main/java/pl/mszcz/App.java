@@ -40,13 +40,18 @@ public class App {
     }
 
     @Bean
-    Sales createSales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage) {
-        return new Sales(productDetailsProvider, cartItemStorage);
+    Sales createSales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage, PurchaseStorage purchaseStorage) {
+        return new Sales(productDetailsProvider, cartItemStorage, purchaseStorage);
     }
 
     @Bean
     CartItemStorage createCartItemStorage() {
         return new JpaCartItemStorage();
+    }
+
+    @Bean
+    PurchaseStorage createPurchaseStorage() {
+        return new JpaPurchaseStorage();
     }
 
     private void createDefaultProducts(ProductCatalog productCatalog) {

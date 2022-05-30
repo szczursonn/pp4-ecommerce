@@ -1,5 +1,6 @@
 package pl.mszcz.sales;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import pl.mszcz.productcatalog.ProductData;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @IdClass(CartItemId.class)
 public class CartItem {
     @Id
+    @JsonIgnore // who cares
     private String customerId;
 
     @Id

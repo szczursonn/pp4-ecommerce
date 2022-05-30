@@ -2,14 +2,18 @@ package pl.mszcz.sales;
 
 import pl.mszcz.productcatalog.ProductData;
 
+import java.util.ArrayList;
+
 public class Sales {
 
     private CartItemStorage cartItemStorage;
     private ProductDetailsProvider productDetailsProvider;
+    private PurchaseStorage purchaseStorage;
 
-    public Sales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage) {
+    public Sales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage, PurchaseStorage purchaseStorage) {
         this.productDetailsProvider = productDetailsProvider;
         this.cartItemStorage = cartItemStorage;
+        this.purchaseStorage = purchaseStorage;
     }
 
     private Cart getCustomerCart(String customerId) {
@@ -35,5 +39,23 @@ public class Sales {
         Cart cart = getCustomerCart(customerId);
 
         cart.remove(productId);
+    }
+
+    public Purchase createPurchase(String customerId) {
+        Cart cart = getCustomerCart(customerId);
+
+        Purchase purchase = new Purchase(null, customerId, new ArrayList<>());
+
+        cart
+                .getOffer()
+                .getItems()
+                .forEach(ci->purchase.addItem(
+                            ci.getProduct().getName(),
+                            ci.getProduct().getPrice(),
+                            ci.getQuantity()
+                        )
+                );
+
+        return purchaseStorage.save(purchase);
     }
 }

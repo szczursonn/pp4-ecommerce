@@ -38,7 +38,11 @@ public class SalesController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not in cart");
         }
+    }
 
+    @GetMapping("/api/sales/purchase")
+    Purchase getCurrentPurchase() {
+        return sales.createPurchase(getCurrentCustomerId());
     }
 
     private String getCurrentCustomerId() {

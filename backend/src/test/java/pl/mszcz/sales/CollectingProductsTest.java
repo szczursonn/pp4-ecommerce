@@ -17,7 +17,7 @@ public class CollectingProductsTest {
     @BeforeEach
     void setup() {
         productDetails = new ArrayList<>();
-        sales = new Sales(new ListProductDetailsProvider(productDetails), new MapCartItemStorage());
+        sales = new Sales(new ListProductDetailsProvider(productDetails), new MapCartItemStorage(), null);  //TODO: fix tests
     }
 
     @Test

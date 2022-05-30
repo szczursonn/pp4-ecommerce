@@ -20,8 +20,8 @@ public class JpaPurchaseStorage implements PurchaseStorage {
     }
 
     @Override
-    public void save(Purchase purchase) {
-        repo.save(purchase);
+    public Purchase save(Purchase purchase) {
+        return repo.save(purchase);
     }
 
     @Override
