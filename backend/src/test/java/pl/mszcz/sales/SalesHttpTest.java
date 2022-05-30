@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import pl.mszcz.productcatalog.exceptions.CantPublishProductException;
 import pl.mszcz.productcatalog.ProductCatalog;
 import pl.mszcz.sales.cart.Offer;
@@ -30,9 +31,15 @@ public class SalesHttpTest {
     @Autowired
     ProductCatalog productCatalog;
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @BeforeEach
     void setup() {
-        // TODO: reset product catalog between tests
+        jdbcTemplate.execute("DELETE FROM purchase_item");
+        jdbcTemplate.execute("DELETE FROM purchase");
+        jdbcTemplate.execute("DELETE FROM cart_item");
+        jdbcTemplate.execute("DELETE FROM product_data");
     }
 
     @Test
