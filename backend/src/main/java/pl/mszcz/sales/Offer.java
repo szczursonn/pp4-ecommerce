@@ -32,6 +32,6 @@ public class Offer {
     }
 
     public int getItemsCount() {
-        return size;
+        return items.size();
     }
 }

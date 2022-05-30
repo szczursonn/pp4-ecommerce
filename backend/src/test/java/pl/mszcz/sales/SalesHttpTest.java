@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import pl.mszcz.productcatalog.CantPublishProductException;
 import pl.mszcz.productcatalog.ProductCatalog;
 
 import java.math.BigDecimal;
@@ -42,17 +43,25 @@ public class SalesHttpTest {
     }
 
     @Test
-    void itAllowsToAddProduct() {
+    void itAllowsToAddProduct() throws CantPublishProductException {
         Long productId = thereIsProduct("giga lego set", BigDecimal.valueOf(12.00));
 
-        String url = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
-        ResponseEntity<Offer> response = http.postForEntity(url, null, null);
+        String url1 = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
+        ResponseEntity<Object> response1 = http.postForEntity(url1, null, null);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response1.getStatusCode());
+
+        String url2 = String.format("http://localhost:%s/api/sales/offer", port);
+        ResponseEntity<Offer> response2 = http.getForEntity(url2, Offer.class);
+
+        Offer offer = response2.getBody();
+        assertEquals(0, BigDecimal.valueOf(12.00).compareTo(offer.getTotal()));
+        assertEquals(1, offer.getItemsCount());
+
     }
 
     @Test
-    void itAllowsToRemoveProduct() {
+    void itAllowsToRemoveProduct() throws CantPublishProductException {
         Long productId = thereIsProduct("fantastyczny secik lego", BigDecimal.valueOf(17.20));
 
         String url = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
@@ -84,7 +93,7 @@ public class SalesHttpTest {
     }
 
     @Test
-    void itAllowsToAddProductWithSpecifiedQuantity() {
+    void itAllowsToAddProductWithSpecifiedQuantity() throws CantPublishProductException {
         Long productId = thereIsProduct("lego set fajny taki", BigDecimal.valueOf(12.00));
 
         String url1 = String.format("http://localhost:%s/api/sales/offer/%s?quantity=5", port, productId);
@@ -109,9 +118,11 @@ public class SalesHttpTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
-    private Long thereIsProduct(String name, BigDecimal price) {
+    private Long thereIsProduct(String name, BigDecimal price) throws CantPublishProductException {
         Long productId = productCatalog.addProduct(name).getId();
         productCatalog.setPrice(productId, price);
+        productCatalog.setImageUrl(productId, "sdada");
+        productCatalog.publishProduct(productId);
         return productId;
     }
 }
