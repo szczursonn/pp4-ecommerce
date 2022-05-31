@@ -1,0 +1,54 @@
+.CartPage {
+    margin: 0 10vw;
+    .disabled {
+        opacity: 50%;
+    }
+    .products-container {
+        margin: 0 10vw;
+        display: flex;
+        flex-direction: column;
+        background-color: #282c34;
+        .cartitem-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 12px;
+            .image-container {
+                background-color: darken($color: #282c34, $amount: 2);
+                .image {
+                    width: 130px;
+                    height: 130px;
+                    max-height: 130px;
+                    object-fit: scale-down;
+                    @media (max-width: 260px) {
+                        width: 50vw;
+                        height: auto;
+                    }
+                }
+            }
+            .price-container {
+                .price-breakdown {
+                    margin: 0px;
+                    opacity: 85%;
+                }
+            }
+            .name {
+                padding: 3px;
+                border-style: hidden;
+                border-width: 3px;
+                border-radius: 3px;
+                border-style:dashed;
+                border-color: #282c34;
+                &:link {
+                    text-decoration: inherit;
+                }
+                &:visited {
+                    color: inherit;
+                }
+                &:focus {
+                    border-color: whitesmoke;
+                }
+            }
+        }
+    }
+}

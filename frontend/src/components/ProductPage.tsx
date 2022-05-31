@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import { ProductData, validateProduct } from "../types/ProductData"
 import Price from "./Price"
 import './ProductPage.scss'
+import QuantitySelector from "./QuantitySelector"
 
 const toRealId = (fakeId: string): string => {
     const x = fakeId.split('-')
@@ -49,12 +50,6 @@ export const ProductPage = () => {
         })
     }
 
-    const updateQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.currentTarget.valueAsNumber
-        if (value < 1 || value > 99) return
-        setQuantity(value)
-    }
-
     return <div className="ProductPage">
         {
             isLoading ? 
@@ -73,11 +68,7 @@ export const ProductPage = () => {
                                 <p className="name">{product!.name}</p>
                                 <Price price={product!.price}/>
                                 <div className="controls">
-                                    <div className="quantity">
-                                        <button className="quantity-alter-button" onClick={()=>setQuantity(quantity-1)} disabled={quantity <= 1}>-</button>
-                                        <input className="quantity-input" type='number' min={1} max={99} value={quantity} autoComplete='off' onChange={updateQuantity}></input>
-                                        <button className="quantity-alter-button" onClick={()=>setQuantity(quantity+1)} disabled={quantity >= 99}>+</button>
-                                    </div>
+                                    <QuantitySelector quantity={quantity} onChange={setQuantity}/>
                                     <button className="add-to-cart-button" onClick={addToCart} disabled={adding}>ADD TO CART</button>
                                     {success && <p>✔️</p>}
                                 </div>
