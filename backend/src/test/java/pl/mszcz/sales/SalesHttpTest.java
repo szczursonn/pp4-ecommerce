@@ -63,8 +63,8 @@ public class SalesHttpTest {
         ResponseEntity<Offer> response2 = http.getForEntity(url2, Offer.class);
 
         Offer offer = response2.getBody();
-        assertEquals(0, BigDecimal.valueOf(12.00).compareTo(offer.getTotal()));
-        assertEquals(1, offer.getItemsCount());
+        assertEquals(0, BigDecimal.valueOf(12.00).compareTo(offer.total()));
+        assertEquals(1, offer.size());
 
     }
 
@@ -85,7 +85,7 @@ public class SalesHttpTest {
         ResponseEntity<Offer> response3 = http.getForEntity(url, Offer.class);
         Offer offer = response3.getBody();
 
-        assertEquals(0, offer.getItemsCount());
+        assertEquals(0, offer.size());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class SalesHttpTest {
         assertEquals(HttpStatus.OK, response2.getStatusCode());
 
         Offer offer = response2.getBody();
-        assertEquals(5, offer.getItems().get(0).getQuantity());
+        assertEquals(5, offer.items().get(0).quantity());
     }
 
     @Test

@@ -9,7 +9,6 @@ import javax.persistence.*;
 @IdClass(CartItemId.class)
 public class CartItem {
     @Id
-    @JsonIgnore // who cares
     private String customerId;
 
     @Id
@@ -48,6 +47,10 @@ public class CartItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public OfferItem getOfferItem() {
+        return new OfferItem(product, quantity);
     }
 
 }

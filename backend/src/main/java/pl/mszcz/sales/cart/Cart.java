@@ -20,7 +20,11 @@ public class Cart {
 
     public Offer getOffer() {
         return new Offer(
-                cartItemStorage.getAllCustomerItems(customerId)
+                cartItemStorage
+                        .getAllCustomerItems(customerId)
+                        .stream()
+                        .map(CartItem::getOfferItem)
+                        .toList()
         );
     }
 

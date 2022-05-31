@@ -35,7 +35,7 @@ public class CollectingProductsTest {
 
         Offer currentOffer = sales.getCurrentOffer(customerId);
 
-        assertEquals(BigDecimal.ZERO, currentOffer.getTotal());
+        assertEquals(BigDecimal.ZERO, currentOffer.total());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class CollectingProductsTest {
         sales.addToCart(customerId, productId, 1);
         Offer currentOffer = sales.getCurrentOffer(customerId);
 
-        assertEquals(BigDecimal.TEN, currentOffer.getTotal());
+        assertEquals(BigDecimal.TEN, currentOffer.total());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class CollectingProductsTest {
 
         Offer offer = sales.getCurrentOffer(customerId);
 
-        assertEquals(3, offer.getItems().size());
+        assertEquals(3, offer.size());
     }
 
     @Test
@@ -74,8 +74,8 @@ public class CollectingProductsTest {
 
         Offer offer = sales.getCurrentOffer(customerId);
 
-        assertEquals(1, offer.getItems().size());
-        assertEquals(5, offer.getItems().get(0).getQuantity());
+        assertEquals(1, offer.size());
+        assertEquals(5, offer.items().get(0).quantity());
     }
 
     @Test
@@ -88,8 +88,8 @@ public class CollectingProductsTest {
 
         Offer offer = sales.getCurrentOffer(customerId);
 
-        assertEquals(1, offer.getItems().size());
-        assertEquals(7, offer.getItems().get(0).getQuantity());
+        assertEquals(1, offer.size());
+        assertEquals(7, offer.items().get(0).quantity());
 
     }
 
@@ -104,8 +104,8 @@ public class CollectingProductsTest {
 
         Offer offer = sales.getCurrentOffer(customerId);
 
-        assertEquals(BigDecimal.valueOf(21.00), offer.getTotal());
-        assertEquals(2, offer.getItemsCount());
+        assertEquals(BigDecimal.valueOf(21.00), offer.total());
+        assertEquals(2, offer.size());
 
     }
 
@@ -120,8 +120,8 @@ public class CollectingProductsTest {
         Offer offer2 = sales.getCurrentOffer(customerId2);
 
 
-        assertEquals(BigDecimal.TEN, offer1.getTotal());
-        assertEquals(BigDecimal.ZERO, offer2.getTotal());
+        assertEquals(BigDecimal.TEN, offer1.total());
+        assertEquals(BigDecimal.ZERO, offer2.total());
     }
 
     private String thereIsCustomer(String customerId) {

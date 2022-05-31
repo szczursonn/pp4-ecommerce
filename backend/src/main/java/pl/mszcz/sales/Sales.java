@@ -53,7 +53,7 @@ public class Sales {
     public PaymentData createPurchase(String customerId, CustomerInfo customerInfo) throws EmptyPurchaseException {
         Cart cart = getCustomerCart(customerId);
 
-        if (cart.getOffer().getItemsCount() == 0) {
+        if (cart.getOffer().size() == 0) {
             throw new EmptyPurchaseException();
         }
 
@@ -61,11 +61,11 @@ public class Sales {
 
         cart
                 .getOffer()
-                .getItems()
-                .forEach(ci->purchase.addItem(
-                            ci.getProduct().getName(),
-                            ci.getProduct().getPrice(),
-                            ci.getQuantity()
+                .items()
+                .forEach(item->purchase.addItem(
+                            item.product().getName(),
+                            item.product().getPrice(),
+                            item.quantity()
                         )
                 );
 
