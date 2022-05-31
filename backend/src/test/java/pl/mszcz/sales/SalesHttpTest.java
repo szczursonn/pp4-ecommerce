@@ -14,10 +14,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import pl.mszcz.productcatalog.exceptions.CantPublishProductException;
 import pl.mszcz.productcatalog.ProductCatalog;
 import pl.mszcz.sales.cart.Offer;
+import pl.mszcz.sales.purchase.CustomerInfo;
+import pl.mszcz.sales.purchase.PaymentData;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SalesHttpTest {
@@ -126,11 +129,42 @@ public class SalesHttpTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
+    @Test
+    void itAllowsToCreatePurchase() throws CantPublishProductException {
+        Long productId = thereIsProduct("lego set 1", BigDecimal.TEN);
+        CustomerInfo customerInfo = thereIsCustomerInfo("maciek", "jacula");
+
+        String url1 = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
+        ResponseEntity<Object> response1 = http.postForEntity(url1, null, null);
+
+        assertEquals(HttpStatus.OK, response1.getStatusCode());
+
+        String url2 = String.format("http://localhost:%s/api/sales/purchase", port);
+        ResponseEntity<PaymentData> response2 = http.postForEntity(url2, customerInfo, PaymentData.class);
+
+        assertEquals(HttpStatus.OK, response2.getStatusCode());
+        assertNotNull(response2.getBody());
+    }
+
+    @Test
+    void itDisallowsToCreatePurchaseWithEmptyOffer() {
+        CustomerInfo customerInfo = thereIsCustomerInfo("maciek", "jacula");
+
+        String url = String.format("http://localhost:%s/api/sales/purchase", port);
+        ResponseEntity<PaymentData> response = http.postForEntity(url, customerInfo, PaymentData.class);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    }
+
     private Long thereIsProduct(String name, BigDecimal price) throws CantPublishProductException {
         Long productId = productCatalog.addProduct(name).getId();
         productCatalog.setPrice(productId, price);
         productCatalog.setImageUrl(productId, "sdada");
         productCatalog.publishProduct(productId);
         return productId;
+    }
+
+    private CustomerInfo thereIsCustomerInfo(String firstName, String lastName) {
+        return new CustomerInfo(firstName, lastName, firstName+lastName+"@gmail.com");
     }
 }
