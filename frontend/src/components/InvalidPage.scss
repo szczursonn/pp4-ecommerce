@@ -1,0 +1,19 @@
+.InvalidPage {
+    .giganumber {
+        font-size: calc(100px + 20vw);
+        margin: 10px;
+    }
+    .explanation {
+        font-size: 18px;
+    }
+    .goback {
+        font-size: 22px;
+        font-weight: bold;
+        &:link {
+            text-decoration: inherit;
+        }
+        &:visited {
+            color: inherit;
+        }
+    }
+}
