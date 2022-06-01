@@ -1,5 +1,7 @@
 package pl.mszcz.sales.purchase;
 
+import pl.mszcz.sales.exceptions.CantRegisterPaymentException;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -88,13 +90,15 @@ public class Purchase {
                 .orElse(BigDecimal.ZERO);
     }
 
-    public PaymentData registerPayment(PaymentGateway paymentGateway) {
+    public PaymentData registerPayment(PaymentGateway paymentGateway, String customerIp) throws CantRegisterPaymentException {
         RegisterPaymentResponse response = paymentGateway.handle(new RegisterPaymentRequest(
                 id,
                 getTotal(),
-                customerFirstName,
-                customerLastName,
-                customerEmail
+                "PLN",
+                "GigaSuperSklep - Order ID "+id,
+                new CustomerInfo(customerFirstName, customerLastName, customerEmail),
+                customerIp,
+                items
         ));
 
         return new PaymentData(response.paymentId(), id, response.url());

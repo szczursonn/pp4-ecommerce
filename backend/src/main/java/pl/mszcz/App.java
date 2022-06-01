@@ -4,15 +4,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import pl.mszcz.ecommerce.NameProvider;
+import pl.mszcz.payu.PayU;
 import pl.mszcz.productcatalog.*;
 import pl.mszcz.productcatalog.exceptions.CantPublishProductException;
 import pl.mszcz.sales.*;
 import pl.mszcz.sales.cart.CartItemStorage;
 import pl.mszcz.sales.cart.JpaCartItemStorage;
-import pl.mszcz.sales.purchase.DummyPaymentGateway;
-import pl.mszcz.sales.purchase.JpaPurchaseStorage;
-import pl.mszcz.sales.purchase.PaymentGateway;
-import pl.mszcz.sales.purchase.PurchaseStorage;
+import pl.mszcz.sales.purchase.*;
 
 import java.math.BigDecimal;
 
@@ -63,7 +61,8 @@ public class App {
 
     @Bean
     PaymentGateway createPaymentGateway() {
-        return new DummyPaymentGateway();
+        PayU payU = new PayU("300746", "");
+        return new PayUPaymentGateway(payU);
     }
 
     private void createDefaultProducts(ProductCatalog productCatalog) {

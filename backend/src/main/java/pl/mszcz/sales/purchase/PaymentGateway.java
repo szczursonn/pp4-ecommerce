@@ -1,8 +1,7 @@
 package pl.mszcz.sales.purchase;
 
-import pl.mszcz.sales.purchase.RegisterPaymentRequest;
-import pl.mszcz.sales.purchase.RegisterPaymentResponse;
+import pl.mszcz.sales.exceptions.CantRegisterPaymentException;
 
 public interface PaymentGateway {
-    RegisterPaymentResponse handle(RegisterPaymentRequest request);
+    RegisterPaymentResponse handle(RegisterPaymentRequest request) throws CantRegisterPaymentException;
 }

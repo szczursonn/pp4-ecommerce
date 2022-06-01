@@ -5,6 +5,7 @@ import pl.mszcz.sales.cart.Cart;
 import pl.mszcz.sales.cart.CartItem;
 import pl.mszcz.sales.cart.CartItemStorage;
 import pl.mszcz.sales.cart.Offer;
+import pl.mszcz.sales.exceptions.CantRegisterPaymentException;
 import pl.mszcz.sales.exceptions.EmptyPurchaseException;
 import pl.mszcz.sales.exceptions.ProductNotAvailableException;
 import pl.mszcz.sales.purchase.*;
@@ -50,7 +51,7 @@ public class Sales {
         cart.remove(productId);
     }
 
-    public PaymentData createPurchase(String customerId, CustomerInfo customerInfo) throws EmptyPurchaseException {
+    public PaymentData createPurchase(String customerId, CustomerInfo customerInfo, String customerIp) throws EmptyPurchaseException, CantRegisterPaymentException {
         Cart cart = getCustomerCart(customerId);
 
         if (cart.getOffer().size() == 0) {
@@ -69,10 +70,14 @@ public class Sales {
                         )
                 );
 
-        PaymentData paymentData = purchase.registerPayment(paymentGateway);
+        Purchase saved = purchaseStorage.save(purchase);
 
-        purchaseStorage.save(purchase);
+        // Empty the cart
+        cart
+                .getOffer()
+                .items()
+                .forEach(item->cartItemStorage.remove(item.product().getId(), customerId));
 
-        return paymentData;
+        return saved.registerPayment(paymentGateway, customerIp);
     }
 }

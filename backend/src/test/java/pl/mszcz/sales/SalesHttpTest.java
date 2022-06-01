@@ -19,8 +19,7 @@ import pl.mszcz.sales.purchase.PaymentData;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SalesHttpTest {
@@ -154,6 +153,29 @@ public class SalesHttpTest {
         ResponseEntity<PaymentData> response = http.postForEntity(url, customerInfo, PaymentData.class);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    }
+
+    @Test
+    void itEmptiesTheCartAfterPurchase() throws CantPublishProductException {
+        Long productId = thereIsProduct("lego set 1", BigDecimal.TEN);
+        CustomerInfo customerInfo = thereIsCustomerInfo("maciek", "jacula");
+
+        // add product to cart
+        String url1 = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
+        ResponseEntity<Object> response1 = http.postForEntity(url1, null, null);
+
+        // create purhcase
+        String url2 = String.format("http://localhost:%s/api/sales/purchase", port);
+        ResponseEntity<PaymentData> response2 = http.postForEntity(url2, customerInfo, PaymentData.class);
+
+        // get cart
+        String url3 = String.format("http://localhost:%s/api/sales/offer", port);
+        ResponseEntity<Offer> response3 = http.getForEntity(url3, Offer.class);
+
+        Offer offer = response3.getBody();
+
+        assertEquals(offer.size(), 0);
+        assertTrue(offer.items().isEmpty());
     }
 
     private Long thereIsProduct(String name, BigDecimal price) throws CantPublishProductException {
