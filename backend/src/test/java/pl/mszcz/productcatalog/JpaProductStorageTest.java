@@ -26,7 +26,7 @@ public class JpaProductStorageTest {
 
     @Test
     void itStoresAndLoadsProduct() {
-        ProductData data = thereIsProduct(1L);
+        ProductData data = thereIsProduct(1L, BigDecimal.TEN);
 
         productStorage.save(data);
         ProductData loaded = productStorage.load(data.getId())
@@ -36,11 +36,11 @@ public class JpaProductStorageTest {
     }
 
     @Test
-    void itLoadsAllPublishedProducts() {
+    void itLoadsOnlyPublishedProducts() {
 
-        ProductData data1 = thereIsProduct(1L);
-        ProductData data2 = thereIsProduct(2L);
-        data1.setPublished(true);
+        ProductData data1 = thereIsProduct(1L, BigDecimal.ONE);
+        ProductData data2 = thereIsProduct(2L, BigDecimal.TEN);
+        data2.setArchived(true);
 
         productStorage.save(data1);
         productStorage.save(data2);
@@ -48,7 +48,7 @@ public class JpaProductStorageTest {
         assertEquals(1, productStorage.allPublished().size());
     }
 
-    private ProductData thereIsProduct(Long productId) {
-        return productStorage.save(new ProductData(productId, "product-"+productId));
+    private ProductData thereIsProduct(Long productId, BigDecimal price) {
+        return productStorage.save(new ProductData(productId, "product-"+productId, price));
     }
 }

@@ -1,6 +1,5 @@
 package pl.mszcz.productcatalog;
 
-import pl.mszcz.productcatalog.exceptions.CantPublishProductException;
 import pl.mszcz.productcatalog.exceptions.InvalidProductIdException;
 
 import java.math.BigDecimal;
@@ -15,36 +14,14 @@ public class ProductCatalog {
         this.productStorage = productStorage;
     }
 
-    public ProductData addProduct(String name) {
-        ProductData product = new ProductData();
-        product.setName(name);
+    public ProductData addProduct(String name, BigDecimal price) {
+        ProductData product = new ProductData(null, name, price);
 
         return productStorage.save(product);
     }
 
     public Optional<ProductData> getProductById(Long productId) {
         return this.productStorage.load(productId);
-    }
-
-    public void publishProduct(Long productId) throws CantPublishProductException {
-        ProductData product = this.getProductById(productId)
-                .orElseThrow(CantPublishProductException::new);
-
-        if (product == null) {
-            throw new InvalidProductIdException();
-        }
-
-        if (product.getPrice() == null) {
-            throw new CantPublishProductException();
-        }
-
-        if (product.getImageUrl() == null) {
-            throw new CantPublishProductException();
-        }
-
-        product.setPublished(true);
-
-        productStorage.save(product);
     }
 
     public List<ProductData> getPublishedProducts() {
@@ -65,6 +42,15 @@ public class ProductCatalog {
                 .orElseThrow(InvalidProductIdException::new);
 
         product.setImageUrl(imageUrl);
+
+        productStorage.save(product);
+    }
+
+    public void setArchive(Long productId, boolean archived) {
+        ProductData product = productStorage.load(productId)
+                .orElseThrow(InvalidProductIdException::new);
+
+        product.setArchived(archived);
 
         productStorage.save(product);
     }

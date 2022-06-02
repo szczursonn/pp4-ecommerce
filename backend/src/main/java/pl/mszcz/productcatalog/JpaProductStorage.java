@@ -22,10 +22,6 @@ public class JpaProductStorage implements ProductStorage {
 
     @Override
     public List<ProductData> allPublished() {
-        return repo
-                .findAll()
-                .stream()
-                .filter(ProductData::isPublished)
-                .toList();
+        return repo.findByArchivedFalse();
     }
 }

@@ -6,6 +6,8 @@ import pl.mszcz.sales.cart.CartItem;
 import pl.mszcz.sales.cart.CartItemStorage;
 import pl.mszcz.sales.cart.MapCartItemStorage;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MapCartItemStorageTest {
@@ -36,7 +38,7 @@ public class MapCartItemStorageTest {
     }
 
     private CartItem thereIsCartItem(String customerId, Long productId) {
-        return new CartItem(customerId, new ProductData(productId, "product-"+productId), 1);
+        return new CartItem(customerId, new ProductData(productId, "product-"+productId, BigDecimal.TEN), 1);
     }
 
 }

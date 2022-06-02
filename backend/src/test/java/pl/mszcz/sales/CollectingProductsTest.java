@@ -130,8 +130,7 @@ public class CollectingProductsTest {
 
     private Long thereIsProduct(Long id, BigDecimal price) {
 
-        ProductData product = new ProductData(id, "product-"+id);
-        product.setPrice(price);
+        ProductData product = new ProductData(id, "product-"+id, price);
 
         productDetails.add(product);
 

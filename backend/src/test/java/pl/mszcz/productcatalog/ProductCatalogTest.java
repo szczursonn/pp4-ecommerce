@@ -1,7 +1,6 @@
 package pl.mszcz.productcatalog;
 
 import org.junit.jupiter.api.Test;
-import pl.mszcz.productcatalog.exceptions.CantPublishProductException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -10,60 +9,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductCatalogTest {
     @Test
-    void itAllowsToListOnlyPublishedProducts() {
+    void itAllowsToArchiveProduct() {
         ProductCatalog catalog = thereIsProductCatalog();
-        List<ProductData> products = catalog.getPublishedProducts();
-        assertEquals(0, products.size());
+        Long productId = catalog.addProduct("gigaprodukt", BigDecimal.TEN).getId();
+
+        assertEquals(1, catalog.getPublishedProducts().size());
+        catalog.setArchive(productId, true);
+
+        assertEquals(0, catalog.getPublishedProducts().size());
+        assertTrue(catalog.getProductById(productId).orElseThrow().isArchived());
     }
 
     @Test
-    void itAllowsToAddProductDraft() {
+    void itAllowsToPublishProductAndSetImageUrl() {
         ProductCatalog catalog = thereIsProductCatalog();
-        Long productId = catalog.addProduct("super lego set").getId();
-
-        List<ProductData> products = catalog.getPublishedProducts();
-        assertEquals(0, products.size());
-        assertDoesNotThrow(()->{
-            catalog.getProductById(productId);
-        });
-    }
-
-    @Test
-    void itDeniesToPublishProductWithoutPrice() {
-        ProductCatalog catalog = thereIsProductCatalog();
-        Long productId = catalog.addProduct("giga lego set 2000").getId();
-        catalog.setImageUrl(productId, "fsdfhfds");
-
-        assertThrows(CantPublishProductException.class, ()->{
-            catalog.publishProduct(productId);
-        });
-    }
-
-    @Test
-    void itDeniesToPublishProductWithoutImageUrl() {
-        ProductCatalog catalog = thereIsProductCatalog();
-        Long productId = catalog.addProduct("lego set").getId();
-        catalog.setPrice(productId, BigDecimal.valueOf(12.50));
-
-        assertThrows(CantPublishProductException.class, ()->{
-            catalog.publishProduct(productId);
-        });
-    }
-
-    @Test
-    void itAllowsToPublishProduct() {
-        ProductCatalog catalog = thereIsProductCatalog();
-        Long productId = catalog.addProduct("produkcik").getId();
+        Long productId = catalog.addProduct("produkcik", BigDecimal.valueOf(12.50)).getId();
         catalog.setImageUrl(productId, "http://fsdfhfds.com/pr1.png");
-        catalog.setPrice(productId, BigDecimal.valueOf(12.50));
-
-        assertDoesNotThrow(()->{
-            catalog.publishProduct(productId);
-        });
 
         List<ProductData> products = catalog.getPublishedProducts();
 
         assertEquals(1, products.size());
+        assertNotNull(products.get(0).getImageUrl());
     }
 
     private ProductCatalog thereIsProductCatalog() {

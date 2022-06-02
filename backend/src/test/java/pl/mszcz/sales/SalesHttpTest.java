@@ -11,7 +11,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import pl.mszcz.productcatalog.exceptions.CantPublishProductException;
 import pl.mszcz.productcatalog.ProductCatalog;
 import pl.mszcz.sales.cart.Offer;
 import pl.mszcz.sales.purchase.CustomerInfo;
@@ -53,7 +52,7 @@ public class SalesHttpTest {
     }
 
     @Test
-    void itAllowsToAddProduct() throws CantPublishProductException {
+    void itAllowsToAddProduct() {
         Long productId = thereIsProduct("giga lego set", BigDecimal.valueOf(12.00));
 
         String url1 = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
@@ -71,7 +70,7 @@ public class SalesHttpTest {
     }
 
     @Test
-    void itAllowsToRemoveProduct() throws CantPublishProductException {
+    void itAllowsToRemoveProduct() {
         Long productId = thereIsProduct("fantastyczny secik lego", BigDecimal.valueOf(17.20));
 
         String url = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
@@ -103,7 +102,7 @@ public class SalesHttpTest {
     }
 
     @Test
-    void itAllowsToAddProductWithSpecifiedQuantity() throws CantPublishProductException {
+    void itAllowsToAddProductWithSpecifiedQuantity() {
         Long productId = thereIsProduct("lego set fajny taki", BigDecimal.valueOf(12.00));
 
         String url1 = String.format("http://localhost:%s/api/sales/offer/%s?quantity=5", port, productId);
@@ -129,7 +128,7 @@ public class SalesHttpTest {
     }
 
     @Test
-    void itAllowsToCreatePurchase() throws CantPublishProductException {
+    void itAllowsToCreatePurchase() {
         Long productId = thereIsProduct("lego set 1", BigDecimal.TEN);
         CustomerInfo customerInfo = thereIsCustomerInfo("maciek", "jacula");
 
@@ -156,7 +155,7 @@ public class SalesHttpTest {
     }
 
     @Test
-    void itEmptiesTheCartAfterPurchase() throws CantPublishProductException {
+    void itEmptiesTheCartAfterPurchase() {
         Long productId = thereIsProduct("lego set 1", BigDecimal.TEN);
         CustomerInfo customerInfo = thereIsCustomerInfo("maciek", "jacula");
 
@@ -178,11 +177,9 @@ public class SalesHttpTest {
         assertTrue(offer.items().isEmpty());
     }
 
-    private Long thereIsProduct(String name, BigDecimal price) throws CantPublishProductException {
-        Long productId = productCatalog.addProduct(name).getId();
-        productCatalog.setPrice(productId, price);
+    private Long thereIsProduct(String name, BigDecimal price) {
+        Long productId = productCatalog.addProduct(name, price).getId();
         productCatalog.setImageUrl(productId, "sdada");
-        productCatalog.publishProduct(productId);
         return productId;
     }
 

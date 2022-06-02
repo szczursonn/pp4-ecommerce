@@ -14,15 +14,16 @@ public class ProductData {
     private String name;
     private BigDecimal price;
     private String imageUrl;
-    private boolean published;
+    private boolean archived;
 
     // constructor for JPA
     public ProductData() {}
 
-    public ProductData(Long productId, String productName) {
+    public ProductData(Long productId, String productName, BigDecimal price) {
         this.id = productId;
         this.name = productName;
-        this.published = false;
+        this.price = price;
+        this.archived = false;
     }
 
     public Long getId() {
@@ -41,8 +42,8 @@ public class ProductData {
         return this.imageUrl;
     }
 
-    public boolean isPublished() {
-        return this.published;
+    public boolean isArchived() {
+        return this.archived;
     }
 
     public void setName(String newName) {
@@ -57,7 +58,7 @@ public class ProductData {
         this.imageUrl = newImageUrl;
     }
 
-    public void setPublished(boolean newState) {
-        this.published = newState;
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }
