@@ -15,12 +15,12 @@ public class PayU {
     private final String authToken;
     private final String redirectUrl;
 
-    public PayU(String merchantPosId, String notifyUrl) {
+    public PayU(String merchantPosId, String notifyUrl, String redirectUrl, String authToken) {
         this.http = new RestTemplate();
         this.merchantPosId = merchantPosId;
         this.notifyUrl = notifyUrl;
-        this.authToken = "d9a4536e-62ba-4f60-8017-6053211d3f47";    // token from payu sandbox code snippets
-        this.redirectUrl = "http://localhost:3000/paymentSuccess";
+        this.redirectUrl = redirectUrl;
+        this.authToken = authToken;
     }
 
     public OrderCreateResponse handle(

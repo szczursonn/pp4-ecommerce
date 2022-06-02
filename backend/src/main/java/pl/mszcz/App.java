@@ -60,7 +60,12 @@ public class App {
 
     @Bean
     PaymentGateway createPaymentGateway() {
-        PayU payU = new PayU("300746", "");
+        PayU payU = new PayU(
+                "300746",
+                "",
+                "http://localhost:3000/paymentSuccess",
+                "d9a4536e-62ba-4f60-8017-6053211d3f47" // token from payu sandbox code snippets
+        );
         return new PayUPaymentGateway(payU);
     }
 
