@@ -2,8 +2,8 @@ export type ProductData = {
     id: number
     name: string
     imageUrl: string | null
-    price: number | null
-    published: boolean
+    price: number
+    archived: boolean
 }
 
 export const validateProduct = (product: any): boolean => {
@@ -12,8 +12,8 @@ export const validateProduct = (product: any): boolean => {
         typeof product.id === 'number' &&
         typeof product.name === 'string' &&
         (typeof product.imageUrl === 'string' || product.imageUrl === null) &&
-        (typeof product.price === 'number' || product.price === null) &&
-        typeof product.published === 'boolean'
+        typeof product.price === 'number' &&
+        typeof product.archived === 'boolean'
         ) return true
     return false
 }
