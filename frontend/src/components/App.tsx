@@ -7,6 +7,7 @@ import CartPage from './CartPage';
 import InvalidPage from './InvalidPage';
 
 const App = () => {
+  
   return (
     <div className="App">
       <Navbar />

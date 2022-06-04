@@ -1,18 +1,86 @@
 .CartPage {
-    margin: 0 10vw;
-    .disabled {
-        opacity: 50%;
+    display: flex;
+    flex-direction: column;
+    margin: 0 20vw;
+    margin-top: 10px;
+    .container-container {
+        display: flex;
     }
-    .products-container {
-        margin: 0 10vw;
+    .controls-container {
         display: flex;
         flex-direction: column;
         background-color: #282c34;
+        margin-left: 30px;
+        padding: 10px 20px;
+        .buy-button {
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 1rem;
+            background-color: #bb86fc;
+            &:hover {
+                cursor: pointer;
+                background-color: lighten(#bb86fc, 3);
+            }
+        }
+        .continue-shopping {
+            &:visited {
+                color: inherit;
+            }
+            &:link {
+                text-decoration: inherit;
+            }
+            &:hover {
+                color: darken(whitesmoke, 10);
+            }
+        }
+    }
+    .products-container {
+        display: flex;
+        flex-direction: column;
+        background-color: #282c34;
+        flex-grow: 2;
         .cartitem-card {
+            position: relative; // only so overlay position works
             display: flex;
             align-items: center;
             justify-content: space-around;
             padding: 12px;
+            .overlay {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: darken($color: #282c34, $amount: 2);
+                opacity: 0.5;
+                z-index: 2;
+                cursor: progress;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .spinner {
+                    display: inline-block;
+                    width: 80px;
+                    height: 80px;
+                    &::after {
+                        content: " ";
+                        display: block;
+                        width: 64px;
+                        height: 64px;
+                        margin: 8px;
+                        border-radius: 50%;
+                        border: 6px solid #fff;
+                        border-color: #fff transparent #fff transparent;
+                        animation: lds-dual-ring 1.2s linear infinite;
+                    }
+                    @keyframes lds-dual-ring {
+                        0% {
+                            transform: rotate(0deg);
+                        }
+                        100% {
+                            transform: rotate(360deg);
+                        }
+                    }
+                }
+            }
             .image-container {
                 background-color: darken($color: #282c34, $amount: 2);
                 .image {
@@ -39,6 +107,7 @@
                 border-radius: 3px;
                 border-style:dashed;
                 border-color: #282c34;
+                font-size: 1.3rem;
                 &:link {
                     text-decoration: inherit;
                 }
@@ -48,7 +117,27 @@
                 &:focus {
                     border-color: whitesmoke;
                 }
+                &:hover {
+                    color: darken(whitesmoke, 10);
+                }
+            }
+            .remove-button {
+                border-width: 0px;
+                background-color: inherit;
+                color: #f03333;
+                &:hover {
+                    color: lighten(#f03333, 2.5)
+                }
+                cursor: pointer;
+                svg {
+                    height: 23px;
+                    width: 23px;
+                }
             }
         }
+    }
+    .payment-container {
+        margin-top: 30px;
+        background-color: #282c34;
     }
 }
