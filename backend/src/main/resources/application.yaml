@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  config:
+    import: secrets.yaml
   datasource:
     url: jdbc:h2:mem:test
     driverClassName: org.h2.Driver

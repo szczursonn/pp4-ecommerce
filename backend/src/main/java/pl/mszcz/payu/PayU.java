@@ -12,15 +12,15 @@ public class PayU {
 
     private final String merchantPosId;
     private final String notifyUrl;
-    private final String authToken;
     private final String redirectUrl;
+    private final AccessTokenProvider accessTokenProvider;
 
-    public PayU(String merchantPosId, String notifyUrl, String redirectUrl, String authToken) {
+    public PayU(String merchantPosId, String clientId, String clientSecret, String notifyUrl, String redirectUrl) {
         this.http = new RestTemplate();
         this.merchantPosId = merchantPosId;
         this.notifyUrl = notifyUrl;
         this.redirectUrl = redirectUrl;
-        this.authToken = authToken;
+        this.accessTokenProvider = new AccessTokenProvider(clientId, clientSecret);
     }
 
     public OrderCreateResponse handle(
@@ -44,7 +44,7 @@ public class PayU {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(authToken);
+        headers.setBearerAuth(accessTokenProvider.getAccessToken());
 
         HttpEntity<OrderCreateRequest> httpReq = new HttpEntity<>(req, headers);
         OrderCreateResponse res = http.postForObject(

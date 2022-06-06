@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 
 @SpringBootApplication
 public class App {
+
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
     }
@@ -59,12 +60,18 @@ public class App {
     }
 
     @Bean
-    PaymentGateway createPaymentGateway() {
+    AppProperties createAppProperties() {
+        return new AppProperties();
+    }
+
+    @Bean
+    PaymentGateway createPaymentGateway(AppProperties appProperties) {
         PayU payU = new PayU(
-                "300746",
+                appProperties.getPayUPosId(),
+                appProperties.getPayUClientId(),
+                appProperties.getPayUClientSecret(),
                 "",
-                "http://localhost:3000/paymentSuccess",
-                "d9a4536e-62ba-4f60-8017-6053211d3f47" // token from payu sandbox code snippets
+                "http://localhost:3000/paymentCallback"
         );
         return new PayUPaymentGateway(payU);
     }
