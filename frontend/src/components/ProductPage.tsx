@@ -5,12 +5,7 @@ import api from "../api"
 import Price from "./Price"
 import styles from './ProductPage.module.scss'
 import QuantitySelector from "./QuantitySelector"
-
-const toRealId = (fakeId: string): string => {
-    const x = fakeId.split('-')
-    return x[x.length-1]
-}
-const toFakeId = (id: string, name: string): string => encodeURIComponent(name.toLowerCase().replace(/ /g, '-')) + '-' + id
+import idConverter from '../utils/ProductIdConverter'
 
 const ProductPage = () => {
 
@@ -20,16 +15,20 @@ const ProductPage = () => {
     const { id } = useParams()
     const queryClient = useQueryClient()
 
-    const realId = toRealId(id || '')
-
+    const realId = idConverter.toRealId(id || '')
+    
     const { data: product, error, isLoading } = useQuery(`product-${realId}`, async () => {
             const product = await api.getProductById(realId)
-            window.history.replaceState(null, '', `/products/${toFakeId(product.id.toString(), product.name)}`)
+            
             return product
         }, {
             staleTime: Infinity
         }
     )
+
+    if (product !== undefined && id !== idConverter.toFakeId(realId, product.name)) {
+        window.history.replaceState(null, '', `/products/${idConverter.toFakeId(product.id, product.name)}`)
+    }
 
     const addToCart = async () => {
         setAdding(true)

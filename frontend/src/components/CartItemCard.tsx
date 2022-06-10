@@ -9,6 +9,7 @@ import { Link } from "react-router-dom"
 import Price from "./Price"
 import styles from './CartItemCard.module.scss'
 import api from "../api"
+import idConverter from '../utils/ProductIdConverter'
 
 const FALLBACK_IMG = '/logo512.png'
 
@@ -20,7 +21,7 @@ const CartItemCard = ({item}: {item: CartItem}) => {
     const queryClient = useQueryClient()
 
     /**
-     * Disabled is set to false only after offer gets re-fetched in parent (CartItem)
+     * Disabled is set to false after offer gets re-fetched in parent (CartItem)
      */
     useEffect(()=>{
         setDisabled(false)
@@ -53,7 +54,7 @@ const CartItemCard = ({item}: {item: CartItem}) => {
         <div className={styles['image-container']}>
             <img alt={item.product.name} src={item.product.imageUrl!} onError={e=>e.currentTarget.src=FALLBACK_IMG}/>
         </div>
-        <Link className={styles.name} to={`/products/${item.product.id}`}>{item.product.name}</Link>
+        <Link className={styles.name} to={`/products/${idConverter.toFakeId(item.product.id.toString(), item.product.name)}`}>{item.product.name}</Link>
         <QuantitySelector quantity={item.quantity} disabled={disabled} onChange={(quantity)=>updateQuantity(quantity)}/>
         <div>
             <Price price={item.quantity*item.product.price}/>

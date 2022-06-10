@@ -3,6 +3,7 @@ import { ProductData } from "../types/ProductData"
 import { useNavigate } from 'react-router-dom'
 import Price from './Price'
 import { useState } from 'react'
+import idConverter from '../utils/ProductIdConverter';
 
 const FALLBACK_IMG = '/logo512.png'
 
@@ -11,7 +12,9 @@ const ProductCard = ({product}: {product: ProductData}) => {
     const [imageLoading, setImageLoading] = useState(true)
     const navigate = useNavigate()
 
-    return <div className={styles.container} onClick={()=>navigate(`/products/${product.id}`)}>
+    const productUrl = `/products/${idConverter.toFakeId(product.id, product.name)}`
+
+    return <div className={styles.container} onClick={()=>navigate(productUrl)}>
         <div className={styles.inner}>
             <div className={styles['image-container']}>
                 <img
@@ -25,7 +28,7 @@ const ProductCard = ({product}: {product: ProductData}) => {
             </div>
             <div className={styles['info-container']}>
                 <Price price={product.price}/>
-                <a className={styles.name} href={`/products/${product.id}`}>{product.name}</a>
+                <a className={styles.name} href={productUrl}>{product.name}</a>
             </div>
         </div>
     </div>
