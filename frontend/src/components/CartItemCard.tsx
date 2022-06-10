@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { CartItem } from "../types/Offer"
 import { Link } from "react-router-dom"
 import Price from "./Price"
+import styles from './CartItemCard.module.scss'
 
 const CartItemCard = ({item}: {item: CartItem}) => {
 
@@ -52,19 +53,19 @@ const CartItemCard = ({item}: {item: CartItem}) => {
         }
     }
 
-    return <div className='cartitem-card' key={item.product.id}>
-        {disabled && <div className="overlay"><div className="spinner"></div></div>}
-        <div className="image-container">
-            <img className="image" alt={item.product.name} src={item.product.imageUrl!}/>
+    return <div className={styles.container} key={item.product.id}>
+        {disabled && <div className={styles.overlay}><div className={styles.spinner}></div></div>}
+        <div className={styles['image-container']}>
+            <img alt={item.product.name} src={item.product.imageUrl!}/>
         </div>
-        <Link className="name" to={`/products/${item.product.id}`}>{item.product.name}</Link>
+        <Link className={styles.name} to={`/products/${item.product.id}`}>{item.product.name}</Link>
         <QuantitySelector quantity={item.quantity} disabled={disabled} onChange={(quantity)=>updateQuantity(quantity)}/>
-        <div className="price-container">
+        <div>
             <Price price={item.quantity*item.product.price}/>
-            <p className="price-breakdown">{item.quantity}x{item.product.price.toFixed(2)} zł</p>
+            <p className={styles["price-breakdown"]}>{item.quantity}x{item.product.price.toFixed(2)} zł</p>
         </div>
         
-        <button className="remove-button" onClick={removeFromCart}>
+        <button className={styles['remove-btn']} onClick={removeFromCart}>
             <FontAwesomeIcon icon={faTrashAlt}/>
         </button>
         {error && <FullScreenModal message={error} onClose={()=>setError(null)}/>}

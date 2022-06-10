@@ -1,4 +1,4 @@
-import './Home.scss'
+import styles from './Home.module.scss'
 import { ProductData, validateProduct } from '../types/ProductData';
 import { ProductCard } from './ProductCard';
 import { useQuery, useQueryClient } from 'react-query';
@@ -31,8 +31,8 @@ const Home = () => {
         }
     }, [error])
 
-    return <div className="Home">
-        <p className='products-title'>PRODUKTY</p>
+    return <div className={styles.container}>
+        <p className={styles.title}>PRODUKTY</p>
         {
             isLoading ?
                 <p>
@@ -48,7 +48,7 @@ const Home = () => {
                             <button onClick={()=>queryClient.invalidateQueries('products')}>load products</button>
                         </>
                     :
-                        <div className='products-container'>
+                        <div className={styles.grid}>
                             {products!.map(product=><ProductCard key={`product-${product.id}`} product={product}/>)}
                         </div>
                     }

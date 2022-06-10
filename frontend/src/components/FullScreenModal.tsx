@@ -1,10 +1,10 @@
-import './FullScreenModal.scss'
+import styles from './FullScreenModal.module.scss'
 
 const FullScreenModal = ({message, onClose}: {message: string, onClose: ()=>void}) => {
-    return <div className="FullScreenModal">
-        <div className='content'>
-            <p className='message'>{message}</p>
-            <button onClick={onClose}>close</button>
+    return <div className={styles.container}>
+        <div className={styles['content-container']}>
+            <p className={styles.message}>{message}</p>
+            <button className={styles['btn-close']} onClick={onClose}>CLOSE</button>
         </div>
     </div>
 }

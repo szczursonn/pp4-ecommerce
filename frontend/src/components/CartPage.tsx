@@ -3,7 +3,7 @@ import { useQuery } from "react-query"
 import { Link } from "react-router-dom"
 import { Offer, validateOffer } from "../types/Offer"
 import CartItemCard from "./CartItemCard"
-import './CartPage.scss'
+import styles from './CartPage.module.scss'
 import Price from "./Price"
 
 const CartPage = () => {
@@ -47,7 +47,7 @@ const CartPage = () => {
         }
     }
 
-    return <div className="CartPage">
+    return <div className={styles['page-container']}>
     {
         isLoading ?
             <p>
@@ -64,18 +64,18 @@ const CartPage = () => {
                         {offer!.items.length === 0 ?
                             <p>Cart is empty, go add something!</p>
                         :   <>
-                                <div className="container-container">
-                                    <div className='products-container'>
+                                <div className={styles.container}>
+                                    <div className={styles['products-container']}>
                                         {offer!.items.map(item=><CartItemCard key={item.product.id} item={item}/>)}
                                     </div>
-                                    <div className="controls-container">
+                                    <div className={styles["controls-container"]}>
                                         <span className="total">Total: <Price price={offer!.total} /></span>
-                                        <button className="buy-button" onClick={()=>setShowPaymentMenu(true)} disabled={purchaseDisabled}>BUY</button>
-                                        <Link className="continue-shopping" to='/'>CONTINUE SHOPPING</Link>
+                                        <button className={styles['buy-btn']} onClick={()=>setShowPaymentMenu(true)} disabled={purchaseDisabled}>BUY</button>
+                                        <Link className={styles['continue-shopping']} to='/'>CONTINUE SHOPPING</Link>
                                     </div>
                                 </div>
                                 {showPaymentMenu && 
-                                    <div className="payment-container">
+                                    <div className={styles['payment-container']}>
                                         <form onSubmit={e=>{e.preventDefault();makePurchase()}}>
                                             <p>First name</p>
                                             <input value={firstName} onChange={e=>setFirstName(e.currentTarget.value)} type='text' />

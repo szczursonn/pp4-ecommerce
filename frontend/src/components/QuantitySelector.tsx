@@ -1,4 +1,4 @@
-import './QuantitySelector.scss'
+import styles from './QuantitySelector.module.scss'
 
 const QuantitySelector = ({quantity, disabled=false, onChange}: {quantity: number, disabled?: boolean, onChange: (quantity: number)=>void}) => {
 
@@ -8,10 +8,10 @@ const QuantitySelector = ({quantity, disabled=false, onChange}: {quantity: numbe
         onChange(value)
     }
 
-    return <div className="QuantitySelector">
-        <button className="quantity-alter-button" onClick={()=>onChange(quantity-1)} disabled={quantity <= 1}>-</button>
-        <input className="quantity-input" type='number' min={1} max={99} value={quantity} autoComplete='off' disabled={disabled} onChange={updateQuantity}></input>
-        <button className="quantity-alter-button" onClick={()=>onChange(quantity+1)} disabled={quantity >= 99}>+</button>
+    return <div>
+        <button className={styles.btn} onClick={()=>onChange(quantity-1)} disabled={quantity <= 1}>-</button>
+        <input className={styles.textfield} type='number' min={1} max={99} value={quantity} autoComplete='off' disabled={disabled} onChange={updateQuantity}></input>
+        <button className={styles.btn} onClick={()=>onChange(quantity+1)} disabled={quantity >= 99}>+</button>
     </div>
 }
 

@@ -1,0 +1,53 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 20vw;
+    margin-top: 10px;
+}
+
+.container {
+    display: flex;
+}
+
+.products-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #282c34;
+    flex-grow: 2;
+}
+
+.controls-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #282c34;
+    margin-left: 30px;
+    padding: 10px 20px;
+}
+
+.buy-btn {
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 1rem;
+    background-color: #bb86fc;
+    &:hover {
+        cursor: pointer;
+        background-color: lighten(#bb86fc, 3);
+    }
+}
+
+.continue-shopping {
+    &:visited {
+        color: inherit;
+    }
+    &:link {
+        text-decoration: inherit;
+    }
+    &:hover {
+        color: darken(whitesmoke, 10);
+    }
+}
+
+.payment-container {
+    margin-top: 30px;
+    background-color: #282c34;
+}

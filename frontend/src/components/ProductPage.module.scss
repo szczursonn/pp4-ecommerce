@@ -1,0 +1,36 @@
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    background-color: #282c34;
+    margin: 0 25vw;
+    margin-top: 50px;
+    padding: 40px;
+}
+
+.image-container {
+    background-color: darken($color: #282c34, $amount: 2);
+    img {
+        width: 500px;
+        height: 500px;
+        object-fit: scale-down;
+    }
+}
+
+.info-container {
+    margin-left: 1vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.add-btn {
+    margin-top: 10px;
+    background-color: #bb86fc;
+    padding: 5px 10px;
+    font-weight: bold;
+}
+
+.product-name {
+    font-size: calc(1rem + 1vw);
+}

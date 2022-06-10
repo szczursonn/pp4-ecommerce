@@ -1,9 +1,9 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import { useQuery, useQueryClient } from "react-query"
 import { useParams } from "react-router-dom"
 import { ProductData, validateProduct } from "../types/ProductData"
 import Price from "./Price"
-import './ProductPage.scss'
+import styles from './ProductPage.module.scss'
 import QuantitySelector from "./QuantitySelector"
 
 const toRealId = (fakeId: string): string => {
@@ -60,16 +60,16 @@ export const ProductPage = () => {
                     error ?
                         <p>Error loading product</p>
                     :
-                        <div className="product-container">
-                            <div className="image-container">
-                                <img className="image" src={product!.imageUrl || ''} alt={product!.name} onError={e=>e.currentTarget.src='/logo512.png'}/>
+                        <div className={styles.container}>
+                            <div className={styles['image-container']}>
+                                <img src={product!.imageUrl || ''} alt={product!.name} onError={e=>e.currentTarget.src='/logo512.png'}/>
                             </div>
-                            <div className="info-container">
-                                <p className="name">{product!.name}</p>
+                            <div className={styles['info-container']}>
+                                <p className={styles['product-name']}>{product!.name}</p>
                                 <Price price={product!.price}/>
                                 <div className="controls">
                                     <QuantitySelector quantity={quantity} onChange={setQuantity}/>
-                                    <button className="add-to-cart-button" onClick={addToCart} disabled={adding}>ADD TO CART</button>
+                                    <button className={styles['add-btn']} onClick={addToCart} disabled={adding}>ADD TO CART</button>
                                     {success && <p>✔️</p>}
                                 </div>
                             </div>

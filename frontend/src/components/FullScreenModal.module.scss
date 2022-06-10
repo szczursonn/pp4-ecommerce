@@ -1,0 +1,38 @@
+.container {
+    position: fixed;
+    z-index: 10000;
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+}
+
+.content-container {
+    position: relative;
+    background-color: darken($color: #282c34, $amount: 2);
+    padding: 15px 40px;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: purple;
+    border-style: solid;   
+}
+
+.message {
+    color: whitesmoke;
+    font-size: 1.8rem;
+}
+
+.btn-close {
+    border: none;
+    padding: 7px 20px;
+    background-color: #bb86fc;
+    font-weight: bold;
+    &:hover {
+        cursor: pointer;
+        background-color: lighten($color: #bb86fc, $amount: 3);
+    }
+}

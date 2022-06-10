@@ -9,9 +9,9 @@ import InvalidPage from './InvalidPage';
 const App = () => {
   
   return (
-    <div className="App">
+    <div>
       <Navbar />
-      <main className='content-container'>
+      <main>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/cart' element={<CartPage />} />
