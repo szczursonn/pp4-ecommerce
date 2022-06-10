@@ -3,9 +3,16 @@
 ### secrets
 1. Create secrets.yaml in src/main/resources
 2. Set values:
-   1. payuclientid - OAuth2 Client ID from PayU
-   2. payuclientsecret - OAuth2 Client Secret from PayU
-   3. payuposid - POS ID from PayU
+   1. ecommerce.clientid - OAuth2 Client ID from PayU
+   2. ecommerce.clientsecret - OAuth2 Client Secret from PayU
+   3. ecommerce.posid - POS ID from PayU
+#### Sample secrets.yaml
+```
+ecommerce:
+  client-id: "123456"
+  client-secret: "d9a4536ba53v4f51605366a5d3f47"
+  pos-id: "654321"
+```
 ### api routes:
 - GET /api/products - get list of all available products
 - GET /api/products/{productId} - get product by id

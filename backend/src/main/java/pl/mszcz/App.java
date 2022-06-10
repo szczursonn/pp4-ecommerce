@@ -3,6 +3,7 @@ package pl.mszcz;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import pl.mszcz.config.AppProperties;
 import pl.mszcz.ecommerce.NameProvider;
 import pl.mszcz.payu.PayU;
 import pl.mszcz.productcatalog.*;
@@ -60,16 +61,11 @@ public class App {
     }
 
     @Bean
-    AppProperties createAppProperties() {
-        return new AppProperties();
-    }
-
-    @Bean
     PaymentGateway createPaymentGateway(AppProperties appProperties) {
         PayU payU = new PayU(
-                appProperties.getPayUPosId(),
-                appProperties.getPayUClientId(),
-                appProperties.getPayUClientSecret(),
+                appProperties.getPosId(),
+                appProperties.getClientId(),
+                appProperties.getClientSecret(),
                 "",
                 "http://localhost:3000/paymentCallback"
         );
@@ -82,6 +78,11 @@ public class App {
 
         Long productId2 = productCatalog.addProduct("Lego set 2", BigDecimal.valueOf(20.20)).getId();
         productCatalog.setImageUrl(productId2, "https://picsum.photos/id/238/200/300");
+    }
+
+    @Bean
+    AppProperties createAppProperties() {
+        return new AppProperties();
     }
 
 }
