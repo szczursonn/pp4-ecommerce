@@ -1,6 +1,6 @@
 import styles from './Home.module.scss'
 import { ProductData, validateProduct } from '../types/ProductData';
-import { ProductCard } from './ProductCard';
+import ProductCard from './ProductCard';
 import { useQuery, useQueryClient } from 'react-query';
 import { useEffect } from 'react';
 

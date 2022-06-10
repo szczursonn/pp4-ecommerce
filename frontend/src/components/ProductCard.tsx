@@ -6,7 +6,7 @@ import { useState } from 'react'
 
 const FALLBACK_IMG = '/logo512.png'
 
-export const ProductCard = ({product}: {product: ProductData}) => {
+const ProductCard = ({product}: {product: ProductData}) => {
 
     const [imageLoading, setImageLoading] = useState(true)
     const navigate = useNavigate()
@@ -30,3 +30,5 @@ export const ProductCard = ({product}: {product: ProductData}) => {
         </div>
     </div>
 }
+
+export default ProductCard

@@ -2,7 +2,7 @@ import './App.scss';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Home';
 import Navbar from './Navbar';
-import { ProductPage } from './ProductPage';
+import ProductPage from './ProductPage';
 import CartPage from './CartPage';
 import InvalidPage from './InvalidPage';
 

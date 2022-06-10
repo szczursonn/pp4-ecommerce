@@ -12,7 +12,7 @@ const toRealId = (fakeId: string): string => {
 }
 const toFakeId = (id: string, name: string): string => encodeURIComponent(name.toLowerCase().replace(/ /g, '-')) + '-' + id
 
-export const ProductPage = () => {
+const ProductPage = () => {
 
     const [quantity, setQuantity] = useState(1)
     const [success, setSuccess] = useState(false)
@@ -79,3 +79,5 @@ export const ProductPage = () => {
         }
     </div>
 }
+
+export default ProductPage
