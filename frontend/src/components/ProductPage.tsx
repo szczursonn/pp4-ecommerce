@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useQuery, useQueryClient } from "react-query"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import API from "../api"
 import Price from "./Price"
 import styles from './ProductPage.module.scss'
@@ -10,18 +10,14 @@ import idConverter from '../utils/ProductIdConverter'
 const ProductPage = () => {
 
     const [quantity, setQuantity] = useState(1)
-    const [success, setSuccess] = useState(false)
     const [adding, setAdding] = useState(false)
     const { id } = useParams()
     const queryClient = useQueryClient()
+    const navigate = useNavigate()
 
     const realId = idConverter.toRealId(id || '')
     
-    const { data: product, error, isLoading } = useQuery(`product-${realId}`, async () => {
-            const product = await API.getProductById(realId)
-            
-            return product
-        }, {
+    const { data: product, error, isLoading } = useQuery(`product-${realId}`, () => API.getProductById(realId), {
             staleTime: Infinity
         }
     )
@@ -32,11 +28,10 @@ const ProductPage = () => {
 
     const addToCart = async () => {
         setAdding(true)
-        setSuccess(false)
         try {
             await API.addProductToCart(realId, quantity)
-            setSuccess(true)
             queryClient.invalidateQueries('offer')
+            navigate('/cart')
         } catch (err) {}
         setAdding(false)
     }
@@ -61,7 +56,6 @@ const ProductPage = () => {
                                 <div className="controls">
                                     <QuantitySelector quantity={quantity} onChange={setQuantity}/>
                                     <button className={styles['add-btn']} onClick={addToCart} disabled={adding}>ADD TO CART</button>
-                                    {success && <p>✔️</p>}
                                 </div>
                             </div>
                         </div>
