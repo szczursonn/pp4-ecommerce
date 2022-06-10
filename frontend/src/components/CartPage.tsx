@@ -21,7 +21,7 @@ const CartPage = () => {
 
     const makePurchase = async () => {
         try {
-            const paymentData = await API.getPaymentData(firstName, lastName, email)
+            const paymentData = await API.getPaymentData({firstName, lastName, email})
             window.location.href = paymentData.url
         } catch (err) {
 

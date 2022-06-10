@@ -1,3 +1,4 @@
+import { CustomerInfo } from "./types/CustomerInfo"
 import { Offer, validateOffer } from "./types/Offer"
 import { PaymentData, validatePaymentData } from "./types/PaymentData"
 import { ProductData, validateProduct } from "./types/ProductData"
@@ -27,17 +28,13 @@ const getOffer = async (): Promise<Offer> => {
     return data as Offer
 }
 
-const getPaymentData = async (firstName: string, lastName: string, email: string): Promise<PaymentData> => {
+const getPaymentData = async (customerInfo: CustomerInfo): Promise<PaymentData> => {
     const res = await fetch(`${BASE_URL}/api/sales/purchase`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            firstName,
-            lastName,
-            email
-        })
+        body: JSON.stringify(customerInfo)
     })
 
     if (!res.ok) throw new Error(res.statusText)
