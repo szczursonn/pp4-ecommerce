@@ -16,6 +16,7 @@ ecommerce:
 ### api routes:
 - GET /api/products - get list of all available products
 - GET /api/products/{productId} - get product by id
+- POST /api/products/generate - generate mock product
 - GET /api/sales/offer - get cart
 - POST /api/sales/offer/{productId}?quantity={quantity} - add product to cart (overwrites if already in cart)
 - DELETE /api/sales/offer/{productId} - remove product from cart

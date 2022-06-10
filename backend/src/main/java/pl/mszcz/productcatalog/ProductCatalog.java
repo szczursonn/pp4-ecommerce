@@ -55,4 +55,11 @@ public class ProductCatalog {
         productStorage.save(product);
     }
 
+    public ProductData generateMockProduct() {
+        MockProductGenerator gen = new MockProductGenerator();
+        ProductData product = gen.generate();
+        ProductData saved = productStorage.save(product);
+        return saved;
+    }
+
 }
