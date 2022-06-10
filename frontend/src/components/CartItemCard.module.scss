@@ -20,6 +20,10 @@
     }
 }
 
+.price-container {
+    width: 120px;
+}
+
 .price-breakdown {
     margin: 0px;
     opacity: 85%;
@@ -33,6 +37,7 @@
     border-style:dashed;
     border-color: #282c34;
     font-size: 1.3rem;
+    width: 150px;
     &:link {
         text-decoration: inherit;
     }

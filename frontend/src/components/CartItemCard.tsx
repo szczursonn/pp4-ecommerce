@@ -56,7 +56,7 @@ const CartItemCard = ({item}: {item: CartItem}) => {
         </div>
         <Link className={styles.name} to={`/products/${idConverter.toFakeId(item.product.id.toString(), item.product.name)}`}>{item.product.name}</Link>
         <QuantitySelector quantity={item.quantity} disabled={disabled} onChange={(quantity)=>updateQuantity(quantity)}/>
-        <div>
+        <div className={styles['price-container']}>
             <Price price={item.quantity*item.product.price}/>
             <p className={styles["price-breakdown"]}>{item.quantity}x{item.product.price.toFixed(2)} zł</p>
         </div>
