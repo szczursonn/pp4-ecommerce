@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useQuery } from "react-query"
 import { Link } from "react-router-dom"
-import { Offer, validateOffer } from "../types/Offer"
+import api from "../api"
 import CartItemCard from "./CartItemCard"
 import styles from './CartPage.module.scss'
 import Price from "./Price"
@@ -14,34 +14,15 @@ const CartPage = () => {
     const [showPaymentMenu, setShowPaymentMenu] = useState(false)
     const [purchaseDisabled, setPurchaseDisabled] = useState(false)
 
-    const { data: offer, error, isLoading } = useQuery('offer', async () => {
-            const res = await fetch('http://localhost:8080/api/sales/offer')
-            if (!res.ok) throw new TypeError(res.statusText)
-            const data = await res.json()
-            if (!validateOffer(data)) throw new Error('Response validation failed')
-            return data as Offer
-        }, {
+    const { data: offer, error, isLoading } = useQuery('offer', api.getOffer, {
             staleTime: Infinity
         }
     )
 
     const makePurchase = async () => {
         try {
-            const res = await fetch('http://localhost:8080/api/sales/purchase', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    firstName,
-                    lastName,
-                    email
-                })
-            })
-            if (!res.ok) throw new TypeError(res.statusText)
-            const data = await res.json()
-            if (typeof data.url === 'string') return  window.location.href = data.url
-            else throw new Error('Response validation failed')
+            const paymentData = await api.getPaymentData(firstName, lastName, email)
+            window.location.href = paymentData.url
         } catch (err) {
 
         }

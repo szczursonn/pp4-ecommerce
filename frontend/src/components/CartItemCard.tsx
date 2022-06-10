@@ -8,6 +8,7 @@ import { CartItem } from "../types/Offer"
 import { Link } from "react-router-dom"
 import Price from "./Price"
 import styles from './CartItemCard.module.scss'
+import api from "../api"
 
 const FALLBACK_IMG = '/logo512.png'
 
@@ -28,12 +29,8 @@ const CartItemCard = ({item}: {item: CartItem}) => {
     const updateQuantity = async (newQuantity: number) => {
         setDisabled(true)
         try {
-            const res = await fetch(`http://localhost:8080/api/sales/offer/${item.product.id}?quantity=${newQuantity}`, {
-                method: 'POST'
-            })
-
-            if (res.ok) queryClient.invalidateQueries('offer')
-            else throw new Error()
+            await api.addProductToCart(item.product.id, newQuantity)
+            queryClient.invalidateQueries('offer')
         } catch (e) {
             setError(`Error: unable to update quantity of "${item.product.name}"`)
             setDisabled(false)
@@ -43,16 +40,12 @@ const CartItemCard = ({item}: {item: CartItem}) => {
     const removeFromCart = async () => {
         setDisabled(true)
         try {
-            const res = await fetch(`http://localhost:8080/api/sales/offer/${item.product.id}`, {
-                method: 'DELETE'
-            })
-            
-            if (res.ok) queryClient.invalidateQueries('offer')
-            else throw new Error()
+            await api.removeProductFromCart(item.product.id)
+            queryClient.invalidateQueries('offer')
         } catch(e) {
             setError(`Error: Unable to delete "${item.product.name}" from cart`)
-            setDisabled(false)
         }
+        setDisabled(false)
     }
 
     return <div className={styles.container} key={item.product.id}>

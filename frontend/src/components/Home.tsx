@@ -1,20 +1,14 @@
 import styles from './Home.module.scss'
-import { ProductData, validateProduct } from '../types/ProductData';
 import ProductCard from './ProductCard';
 import { useQuery, useQueryClient } from 'react-query';
 import { useEffect } from 'react';
+import api from '../api';
 
 const Home = () => {
 
     const queryClient = useQueryClient()
 
-    const { data: products, error, isLoading } = useQuery('products', async () => {
-            const res = await fetch('http://localhost:8080/api/products')
-            if (!res.ok) throw new TypeError(res.statusText)
-            const data = await res.json()
-            if (!(data instanceof Array) || !data.every(validateProduct)) throw new Error('Response validation failed')
-            return data as ProductData[]
-        }, {
+    const { data: products, error, isLoading } = useQuery('products', api.getProducts, {
             staleTime: Infinity
         }
     )
@@ -33,9 +27,7 @@ const Home = () => {
 
     const generateNewProduct = async () => {
         try {
-            await fetch('http://localhost:8080/api/products/generate', {
-                method: 'POST'
-            })
+            await api.generateNewProduct()
             queryClient.invalidateQueries('products')
         } catch (err) {}
     }

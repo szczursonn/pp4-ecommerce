@@ -9,6 +9,7 @@ export type ProductData = {
 export const validateProduct = (product: any): boolean => {
     if (
         typeof product === 'object' &&
+        product !== null &&
         typeof product.id === 'number' &&
         typeof product.name === 'string' &&
         (typeof product.imageUrl === 'string' || product.imageUrl === null) &&
