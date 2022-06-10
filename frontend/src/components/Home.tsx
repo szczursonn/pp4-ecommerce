@@ -31,8 +31,18 @@ const Home = () => {
         }
     }, [error])
 
+    const generateNewProduct = async () => {
+        try {
+            await fetch('http://localhost:8080/api/products/generate', {
+                method: 'POST'
+            })
+            queryClient.invalidateQueries('products')
+        } catch (err) {}
+    }
+
     return <div className={styles.container}>
         <p className={styles.title}>PRODUKTY</p>
+        <button className={styles['debug-btn']} onClick={generateNewProduct}>***DEBUG*** generate new product</button>
         {
             isLoading ?
                 <p>

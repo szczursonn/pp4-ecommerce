@@ -9,6 +9,8 @@ import { Link } from "react-router-dom"
 import Price from "./Price"
 import styles from './CartItemCard.module.scss'
 
+const FALLBACK_IMG = '/logo512.png'
+
 const CartItemCard = ({item}: {item: CartItem}) => {
 
     const [error, setError] = useState<string | null>(null)
@@ -56,7 +58,7 @@ const CartItemCard = ({item}: {item: CartItem}) => {
     return <div className={styles.container} key={item.product.id}>
         {disabled && <div className={styles.overlay}><div className={styles.spinner}></div></div>}
         <div className={styles['image-container']}>
-            <img alt={item.product.name} src={item.product.imageUrl!}/>
+            <img alt={item.product.name} src={item.product.imageUrl!} onError={e=>e.currentTarget.src=FALLBACK_IMG}/>
         </div>
         <Link className={styles.name} to={`/products/${item.product.id}`}>{item.product.name}</Link>
         <QuantitySelector quantity={item.quantity} disabled={disabled} onChange={(quantity)=>updateQuantity(quantity)}/>
