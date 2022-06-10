@@ -69,7 +69,7 @@ const generateNewProduct = async () => {
     })
 }
 
-export default {
+const API = {
     addProductToCart,
     removeProductFromCart,
     getOffer,
@@ -78,3 +78,5 @@ export default {
     getProductById,
     generateNewProduct
 }
+
+export default API

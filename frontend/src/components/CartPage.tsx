@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useQuery } from "react-query"
 import { Link } from "react-router-dom"
-import api from "../api"
+import API from "../api"
 import CartItemCard from "./CartItemCard"
 import styles from './CartPage.module.scss'
 import Price from "./Price"
@@ -14,14 +14,14 @@ const CartPage = () => {
     const [showPaymentMenu, setShowPaymentMenu] = useState(false)
     const [purchaseDisabled, setPurchaseDisabled] = useState(false)
 
-    const { data: offer, error, isLoading } = useQuery('offer', api.getOffer, {
+    const { data: offer, error, isLoading } = useQuery('offer', API.getOffer, {
             staleTime: Infinity
         }
     )
 
     const makePurchase = async () => {
         try {
-            const paymentData = await api.getPaymentData(firstName, lastName, email)
+            const paymentData = await API.getPaymentData(firstName, lastName, email)
             window.location.href = paymentData.url
         } catch (err) {
 

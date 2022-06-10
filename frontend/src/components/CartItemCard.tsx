@@ -8,7 +8,7 @@ import { CartItem } from "../types/Offer"
 import { Link } from "react-router-dom"
 import Price from "./Price"
 import styles from './CartItemCard.module.scss'
-import api from "../api"
+import API from "../api"
 import idConverter from '../utils/ProductIdConverter'
 
 const FALLBACK_IMG = '/logo512.png'
@@ -30,7 +30,7 @@ const CartItemCard = ({item}: {item: CartItem}) => {
     const updateQuantity = async (newQuantity: number) => {
         setDisabled(true)
         try {
-            await api.addProductToCart(item.product.id, newQuantity)
+            await API.addProductToCart(item.product.id, newQuantity)
             queryClient.invalidateQueries('offer')
         } catch (e) {
             setError(`Error: unable to update quantity of "${item.product.name}"`)
@@ -41,7 +41,7 @@ const CartItemCard = ({item}: {item: CartItem}) => {
     const removeFromCart = async () => {
         setDisabled(true)
         try {
-            await api.removeProductFromCart(item.product.id)
+            await API.removeProductFromCart(item.product.id)
             queryClient.invalidateQueries('offer')
         } catch(e) {
             setError(`Error: Unable to delete "${item.product.name}" from cart`)

@@ -2,13 +2,13 @@ import styles from './Home.module.scss'
 import ProductCard from './ProductCard';
 import { useQuery, useQueryClient } from 'react-query';
 import { useEffect } from 'react';
-import api from '../api';
+import API from '../api';
 
 const Home = () => {
 
     const queryClient = useQueryClient()
 
-    const { data: products, error, isLoading } = useQuery('products', api.getProducts, {
+    const { data: products, error, isLoading } = useQuery('products', API.getProducts, {
             staleTime: Infinity
         }
     )
@@ -27,7 +27,7 @@ const Home = () => {
 
     const generateNewProduct = async () => {
         try {
-            await api.generateNewProduct()
+            await API.generateNewProduct()
             queryClient.invalidateQueries('products')
         } catch (err) {}
     }

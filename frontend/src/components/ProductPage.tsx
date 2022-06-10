@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useQuery, useQueryClient } from "react-query"
 import { useParams } from "react-router-dom"
-import api from "../api"
+import API from "../api"
 import Price from "./Price"
 import styles from './ProductPage.module.scss'
 import QuantitySelector from "./QuantitySelector"
@@ -18,7 +18,7 @@ const ProductPage = () => {
     const realId = idConverter.toRealId(id || '')
     
     const { data: product, error, isLoading } = useQuery(`product-${realId}`, async () => {
-            const product = await api.getProductById(realId)
+            const product = await API.getProductById(realId)
             
             return product
         }, {
@@ -34,7 +34,7 @@ const ProductPage = () => {
         setAdding(true)
         setSuccess(false)
         try {
-            await api.addProductToCart(realId, quantity)
+            await API.addProductToCart(realId, quantity)
             setSuccess(true)
             queryClient.invalidateQueries('offer')
         } catch (err) {}
