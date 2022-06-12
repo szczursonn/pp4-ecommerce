@@ -25,16 +25,23 @@ const Home = () => {
         }
     }, [error])
 
-    const generateNewProduct = async () => {
-        try {
-            await API.generateNewProduct()
-            queryClient.invalidateQueries('products')
-        } catch (err) {}
+    const generateXNewProducts = async (x: number) => {
+        const promises: Promise<any>[] = []
+        for (let i=0;i<x;i++) {
+            promises.push(API.generateNewProduct())
+        }
+
+        await Promise.allSettled(promises)
+        queryClient.invalidateQueries('products')
     }
 
     return <div className={styles.container}>
         <p className={styles.title}>PRODUKTY</p>
-        <button className={styles['debug-btn']} onClick={generateNewProduct}>***DEBUG*** generate new product</button>
+        <div className={styles['debug-btn-container']}>
+            <button className={styles['debug-btn']} onClick={()=>generateXNewProducts(1)}>***DEBUG*** generate new product</button>
+            <button className={styles['debug-btn']} onClick={()=>generateXNewProducts(5)}>X5</button>
+            <button className={styles['debug-btn']} onClick={()=>generateXNewProducts(10)}>X10</button>
+        </div>
         {
             isLoading ?
                 <p>

@@ -19,6 +19,12 @@
   width: 100%;
 }
 
-.debug-btn {
+.debug-btn-container {
   position: absolute;
+}
+
+.debug-btn {
+  margin: 0px 5px;
+  border-color: hotpink;
+  border-radius: 3px;
 }
