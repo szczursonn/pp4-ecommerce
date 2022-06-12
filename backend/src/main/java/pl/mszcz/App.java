@@ -10,6 +10,8 @@ import pl.mszcz.productcatalog.*;
 import pl.mszcz.sales.*;
 import pl.mszcz.sales.cart.CartItemStorage;
 import pl.mszcz.sales.cart.JpaCartItemStorage;
+import pl.mszcz.sales.cart.MD5OfferChecksumGenerator;
+import pl.mszcz.sales.cart.OfferChecksumGenerator;
 import pl.mszcz.sales.purchase.*;
 
 import java.math.BigDecimal;
@@ -46,8 +48,14 @@ public class App {
     }
 
     @Bean
-    Sales createSales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage, PurchaseStorage purchaseStorage, PaymentGateway paymentGateway) {
-        return new Sales(productDetailsProvider, cartItemStorage, purchaseStorage, paymentGateway);
+    Sales createSales(
+            ProductDetailsProvider productDetailsProvider,
+            CartItemStorage cartItemStorage,
+            PurchaseStorage purchaseStorage,
+            PaymentGateway paymentGateway,
+            OfferChecksumGenerator offerChecksumGenerator
+    ) {
+        return new Sales(productDetailsProvider, cartItemStorage, purchaseStorage, paymentGateway, offerChecksumGenerator);
     }
 
     @Bean
@@ -58,6 +66,11 @@ public class App {
     @Bean
     PurchaseStorage createPurchaseStorage() {
         return new JpaPurchaseStorage();
+    }
+
+    @Bean
+    OfferChecksumGenerator createOfferChecksumGenerator() {
+        return new MD5OfferChecksumGenerator();
     }
 
     @Bean

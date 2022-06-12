@@ -1,29 +1,32 @@
 package pl.mszcz.sales;
 
 import pl.mszcz.productcatalog.ProductData;
-import pl.mszcz.sales.cart.Cart;
-import pl.mszcz.sales.cart.CartItem;
-import pl.mszcz.sales.cart.CartItemStorage;
-import pl.mszcz.sales.cart.Offer;
-import pl.mszcz.sales.exceptions.CantRegisterPaymentException;
-import pl.mszcz.sales.exceptions.EmptyPurchaseException;
-import pl.mszcz.sales.exceptions.ProductNotAvailableException;
+import pl.mszcz.sales.cart.*;
+import pl.mszcz.sales.exceptions.*;
 import pl.mszcz.sales.purchase.*;
 
 import java.util.ArrayList;
 
 public class Sales {
 
-    private CartItemStorage cartItemStorage;
-    private ProductDetailsProvider productDetailsProvider;
-    private PurchaseStorage purchaseStorage;
-    private PaymentGateway paymentGateway;
+    private final CartItemStorage cartItemStorage;
+    private final ProductDetailsProvider productDetailsProvider;
+    private final PurchaseStorage purchaseStorage;
+    private final PaymentGateway paymentGateway;
+    private final OfferChecksumGenerator offerChecksumGenerator;
 
-    public Sales(ProductDetailsProvider productDetailsProvider, CartItemStorage cartItemStorage, PurchaseStorage purchaseStorage, PaymentGateway paymentGateway) {
+    public Sales(
+            ProductDetailsProvider productDetailsProvider,
+            CartItemStorage cartItemStorage,
+            PurchaseStorage purchaseStorage,
+            PaymentGateway paymentGateway,
+            OfferChecksumGenerator offerChecksumGenerator
+    ) {
         this.productDetailsProvider = productDetailsProvider;
         this.cartItemStorage = cartItemStorage;
         this.purchaseStorage = purchaseStorage;
         this.paymentGateway = paymentGateway;
+        this.offerChecksumGenerator = offerChecksumGenerator;
     }
 
     private Cart getCustomerCart(String customerId) {
@@ -51,11 +54,15 @@ public class Sales {
         cart.remove(productId);
     }
 
-    public PaymentData createPurchase(String customerId, CustomerInfo customerInfo, String customerIp) throws EmptyPurchaseException, CantRegisterPaymentException {
+    public PaymentData createPurchase(String customerId, CustomerInfo customerInfo, String customerIp, String offerChecksum) throws EmptyPurchaseException, CantRegisterPaymentException, CantGenerateOfferChecksumException, InvalidOfferChecksumException {
         Cart cart = getCustomerCart(customerId);
 
         if (cart.getOffer().size() == 0) {
             throw new EmptyPurchaseException();
+        }
+
+        if (!this.getOfferChecksum(cart.getOffer()).equals(offerChecksum)) {
+            throw new InvalidOfferChecksumException();
         }
 
         Purchase purchase = new Purchase(null, new ArrayList<>(), customerId, customerInfo);
@@ -79,5 +86,9 @@ public class Sales {
                 .forEach(item->cartItemStorage.remove(item.product().getId(), customerId));
 
         return saved.registerPayment(paymentGateway, customerIp);
+    }
+
+    public String getOfferChecksum(Offer offer) throws CantGenerateOfferChecksumException {
+        return offerChecksumGenerator.getChecksum(offer);
     }
 }

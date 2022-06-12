@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.mszcz.sales.cart.Offer;
-import pl.mszcz.sales.exceptions.CantRegisterPaymentException;
-import pl.mszcz.sales.exceptions.EmptyPurchaseException;
-import pl.mszcz.sales.exceptions.ProductNotAvailableException;
+import pl.mszcz.sales.cart.OfferResponse;
+import pl.mszcz.sales.exceptions.*;
 import pl.mszcz.sales.purchase.CustomerInfo;
 import pl.mszcz.sales.purchase.PaymentData;
+import pl.mszcz.sales.purchase.PurchaseRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -24,8 +24,14 @@ public class SalesController {
     }
 
     @GetMapping("/api/sales/offer")
-    Offer getCurrentOffer() {
-        return sales.getCurrentOffer(getCurrentCustomerId());
+    OfferResponse getCurrentOffer() {
+        Offer offer = sales.getCurrentOffer(getCurrentCustomerId());
+        try {
+            return new OfferResponse(offer, sales.getOfferChecksum(offer));
+        } catch (CantGenerateOfferChecksumException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PostMapping("/api/sales/offer/{productId}")
@@ -48,14 +54,18 @@ public class SalesController {
     }
 
     @PostMapping("/api/sales/purchase") // Returns a payment url
-    PaymentData createPurchase(@RequestBody CustomerInfo customerInfo, HttpServletRequest request) {
+    PaymentData createPurchase(@RequestBody PurchaseRequest purchaseRequest, HttpServletRequest request) {
         try {
             String clientIp = getClientIpAddress(request);
-            return sales.createPurchase(getCurrentCustomerId(), customerInfo, clientIp);
+            return sales.createPurchase(getCurrentCustomerId(), purchaseRequest.customerInfo(), clientIp, purchaseRequest.offerChecksum());
         } catch (EmptyPurchaseException ex) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Offer is empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Offer is empty");
         } catch (CantRegisterPaymentException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Can't generate payment");
+        } catch (InvalidOfferChecksumException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Offer checksum mismatch");
+        } catch (CantGenerateOfferChecksumException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

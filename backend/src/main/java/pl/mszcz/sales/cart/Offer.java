@@ -1,9 +1,10 @@
 package pl.mszcz.sales.cart;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-public record Offer(List<OfferItem> items, BigDecimal total, int size) {
+public record Offer(List<OfferItem> items, BigDecimal total, int size) implements Serializable {
     public Offer(List<OfferItem> items) {
         this(
                 items,

@@ -13,8 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import pl.mszcz.productcatalog.ProductCatalog;
 import pl.mszcz.sales.cart.Offer;
+import pl.mszcz.sales.cart.OfferResponse;
 import pl.mszcz.sales.purchase.CustomerInfo;
 import pl.mszcz.sales.purchase.PaymentData;
+import pl.mszcz.sales.purchase.PurchaseRequest;
 
 import java.math.BigDecimal;
 
@@ -61,9 +63,9 @@ public class SalesHttpTest {
         assertEquals(HttpStatus.OK, response1.getStatusCode());
 
         String url2 = String.format("http://localhost:%s/api/sales/offer", port);
-        ResponseEntity<Offer> response2 = http.getForEntity(url2, Offer.class);
+        ResponseEntity<OfferResponse> response2 = http.getForEntity(url2, OfferResponse.class);
 
-        Offer offer = response2.getBody();
+        Offer offer = response2.getBody().offer();
         assertEquals(0, BigDecimal.valueOf(12.00).compareTo(offer.total()));
         assertEquals(1, offer.size());
 
@@ -106,16 +108,17 @@ public class SalesHttpTest {
         Long productId = thereIsProduct("lego set fajny taki", BigDecimal.valueOf(12.00));
 
         String url1 = String.format("http://localhost:%s/api/sales/offer/%s?quantity=5", port, productId);
-        ResponseEntity<Offer> response1 = http.postForEntity(url1, null, null);
+        ResponseEntity<Object> response1 = http.postForEntity(url1, null, null);
 
         assertEquals(HttpStatus.OK, response1.getStatusCode());
 
-        String url2 = String.format("http://localhost:%s/api/sales/offer", port, productId);
-        ResponseEntity<Offer> response2 = http.getForEntity(url2, Offer.class);
+
+        String url2 = String.format("http://localhost:%s/api/sales/offer", port);
+        ResponseEntity<OfferResponse> response2 = http.getForEntity(url2, OfferResponse.class);
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
 
-        Offer offer = response2.getBody();
+        Offer offer = response2.getBody().offer();
         assertEquals(5, offer.items().get(0).quantity());
     }
 
@@ -132,16 +135,48 @@ public class SalesHttpTest {
         Long productId = thereIsProduct("lego set 1", BigDecimal.TEN);
         CustomerInfo customerInfo = thereIsCustomerInfo("maciek", "jacula");
 
+        // add product to cart
         String url1 = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
         ResponseEntity<Object> response1 = http.postForEntity(url1, null, null);
 
         assertEquals(HttpStatus.OK, response1.getStatusCode());
 
-        String url2 = String.format("http://localhost:%s/api/sales/purchase", port);
-        ResponseEntity<PaymentData> response2 = http.postForEntity(url2, customerInfo, PaymentData.class);
+        // get cart
+        String url2 = String.format("http://localhost:%s/api/sales/offer", port);
+        ResponseEntity<OfferResponse> response2 = http.getForEntity(url2, OfferResponse.class);
 
         assertEquals(HttpStatus.OK, response2.getStatusCode());
-        assertNotNull(response2.getBody());
+
+        String checksum = response2.getBody().checksum();
+
+        PurchaseRequest purchaseRequest = new PurchaseRequest(customerInfo, checksum);
+
+        // make purchase
+        String url3 = String.format("http://localhost:%s/api/sales/purchase", port);
+        ResponseEntity<PaymentData> response3 = http.postForEntity(url3, purchaseRequest, PaymentData.class);
+
+        assertEquals(HttpStatus.OK, response3.getStatusCode());
+        assertNotNull(response3.getBody());
+    }
+
+    @Test
+    void itDisallowsToCreatePurchaseWithWrongChecksum() {
+        Long productId = thereIsProduct("lego set 1", BigDecimal.TEN);
+        CustomerInfo customerInfo = thereIsCustomerInfo("maciek", "jacula");
+
+        // add product to cart
+        String url1 = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
+        ResponseEntity<Object> response1 = http.postForEntity(url1, null, null);
+
+        assertEquals(HttpStatus.OK, response1.getStatusCode());
+
+        PurchaseRequest purchaseRequest = new PurchaseRequest(customerInfo, "SDFGHDSGHFJSDJGHFSDGHJFJHDSFJHG123");
+
+        // make purchase
+        String url2 = String.format("http://localhost:%s/api/sales/purchase", port);
+        ResponseEntity<PaymentData> response2 = http.postForEntity(url2, purchaseRequest, PaymentData.class);
+
+        assertEquals(HttpStatus.CONFLICT, response2.getStatusCode());
     }
 
     @Test
@@ -151,7 +186,7 @@ public class SalesHttpTest {
         String url = String.format("http://localhost:%s/api/sales/purchase", port);
         ResponseEntity<PaymentData> response = http.postForEntity(url, customerInfo, PaymentData.class);
 
-        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -163,18 +198,61 @@ public class SalesHttpTest {
         String url1 = String.format("http://localhost:%s/api/sales/offer/%s", port, productId);
         ResponseEntity<Object> response1 = http.postForEntity(url1, null, null);
 
-        // create purhcase
-        String url2 = String.format("http://localhost:%s/api/sales/purchase", port);
-        ResponseEntity<PaymentData> response2 = http.postForEntity(url2, customerInfo, PaymentData.class);
+        // get checksum
+        String url2 = String.format("http://localhost:%s/api/sales/offer", port);
+        ResponseEntity<OfferResponse> response2 = http.getForEntity(url2, OfferResponse.class);
+        String checksum = response2.getBody().checksum();
+
+        // create purchase
+        String url3 = String.format("http://localhost:%s/api/sales/purchase", port);
+        PurchaseRequest purchaseRequest = new PurchaseRequest(customerInfo, checksum);
+        ResponseEntity<PaymentData> response3 = http.postForEntity(url3, purchaseRequest, PaymentData.class);
+
+        assertEquals(response3.getStatusCode(), HttpStatus.OK);
 
         // get cart
-        String url3 = String.format("http://localhost:%s/api/sales/offer", port);
-        ResponseEntity<Offer> response3 = http.getForEntity(url3, Offer.class);
+        String url4 = String.format("http://localhost:%s/api/sales/offer", port);
+        ResponseEntity<OfferResponse> response4 = http.getForEntity(url4, OfferResponse.class);
 
-        Offer offer = response3.getBody();
+        Offer offer = response4.getBody().offer();
 
-        assertEquals(offer.size(), 0);
+        assertEquals(0, offer.size());
         assertTrue(offer.items().isEmpty());
+    }
+
+    @Test
+    void itUpdatesOfferChecksum() {
+        Long productId1 = thereIsProduct("lego set 1", BigDecimal.TEN);
+        Long productId2 = thereIsProduct("lego set 3434343", BigDecimal.valueOf(123.53));
+        CustomerInfo customerInfo = thereIsCustomerInfo("maciek", "jacula");
+
+        String cartUrl = String.format("http://localhost:%s/api/sales/offer", port);
+
+        // add product to cart
+        String url1 = String.format("http://localhost:%s/api/sales/offer/%s", port, productId1);
+        http.postForEntity(url1, null, null);
+
+        // get checksum
+        String checksum1 = http.getForObject(cartUrl, OfferResponse.class).checksum();
+
+        // change product quantity
+        String url2 = String.format("http://localhost:%s/api/sales/offer/%s?quantity=10", port, productId1);
+        http.postForEntity(url2, null, null);
+
+        // get checksum
+        String checksum2 = http.getForObject(cartUrl, OfferResponse.class).checksum();
+
+        // change product quantity
+        String url3 = String.format("http://localhost:%s/api/sales/offer/%s?quantity=5", port, productId2);
+        http.postForEntity(url3, null, null);
+
+        // get checksum
+        String checksum3 = http.getForObject(cartUrl, OfferResponse.class).checksum();
+
+        assertNotEquals(checksum1, checksum2);
+        assertNotEquals(checksum2, checksum3);
+        assertNotEquals(checksum1, checksum3);
+
     }
 
     private Long thereIsProduct(String name, BigDecimal price) {

@@ -3,6 +3,7 @@ package pl.mszcz.sales;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.mszcz.productcatalog.ProductData;
+import pl.mszcz.sales.cart.MD5OfferChecksumGenerator;
 import pl.mszcz.sales.cart.MapCartItemStorage;
 import pl.mszcz.sales.cart.Offer;
 import pl.mszcz.sales.exceptions.ProductNotAvailableException;
@@ -26,7 +27,9 @@ public class CollectingProductsTest {
                 new ListProductDetailsProvider(productDetails),
                 new MapCartItemStorage(),
                 new MapPurchaseStorage(),
-                new DummyPaymentGateway());
+                new DummyPaymentGateway(),
+                new MD5OfferChecksumGenerator()
+        );
     }
 
     @Test
