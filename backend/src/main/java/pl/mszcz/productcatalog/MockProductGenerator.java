@@ -11,7 +11,7 @@ public class MockProductGenerator {
         Random r = new Random();
         String name = Integer.toString(Math.abs(r.nextInt() % 1000000), 20);
         BigDecimal price = BigDecimal.valueOf(Math.abs(r.nextInt() % 25000)/100.0).setScale(2, RoundingMode.CEILING);
-        String image = "https://picsum.photos/id/" + Integer.toString(r.nextInt() % 1000) + "/200/300";
+        String image = "https://picsum.photos/id/" + Integer.toString(Math.abs(r.nextInt()) % 1000) + "/200/300";
         ProductData product = new ProductData(
                 null,
                 name,
