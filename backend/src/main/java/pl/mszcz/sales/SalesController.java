@@ -57,7 +57,7 @@ public class SalesController {
     PaymentData createPurchase(@RequestBody PurchaseRequest purchaseRequest, HttpServletRequest request) {
         try {
             String clientIp = getClientIpAddress(request);
-            return sales.createPurchase(getCurrentCustomerId(), purchaseRequest.customerInfo(), clientIp, purchaseRequest.offerChecksum());
+            return sales.createPurchase(getCurrentCustomerId(), purchaseRequest.customerInfo(), clientIp, purchaseRequest.checksum());
         } catch (EmptyPurchaseException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Offer is empty");
         } catch (CantRegisterPaymentException ex) {

@@ -56,19 +56,23 @@ public class Sales {
 
     public PaymentData createPurchase(String customerId, CustomerInfo customerInfo, String customerIp, String offerChecksum) throws EmptyPurchaseException, CantRegisterPaymentException, CantGenerateOfferChecksumException, InvalidOfferChecksumException {
         Cart cart = getCustomerCart(customerId);
+        Offer offer = cart.getOffer();
 
-        if (cart.getOffer().size() == 0) {
+        if (offer.size() == 0) {
             throw new EmptyPurchaseException();
         }
 
-        if (!this.getOfferChecksum(cart.getOffer()).equals(offerChecksum)) {
+        String realChecksum = this.getOfferChecksum(offer);
+
+        if (!realChecksum.equals(offerChecksum)) {
+            System.out.println("req checksum: " + offerChecksum);
+            System.out.println("real checksum: " + realChecksum);
             throw new InvalidOfferChecksumException();
         }
 
         Purchase purchase = new Purchase(null, new ArrayList<>(), customerId, customerInfo);
 
-        cart
-                .getOffer()
+        offer
                 .items()
                 .forEach(item->purchase.addItem(
                             item.product().getName(),
