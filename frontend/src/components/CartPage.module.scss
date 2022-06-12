@@ -47,7 +47,42 @@
     }
 }
 
-.payment-container {
-    margin-top: 30px;
+.textinput {
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.delivery-container {
     background-color: #282c34;
+    padding: 25px 25px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pay-btn {
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 1rem;
+    background-color: #bb86fc;
+    &:hover {
+        cursor: pointer;
+        background-color: lighten(#bb86fc, 3);
+    }
+}
+
+.customerinfo-container {
+    background-color: #282c34;
+    padding: 25px 25px;
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.pay-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #282c34;
+    padding: 10px 20px;
+    margin-top: 20px;
 }

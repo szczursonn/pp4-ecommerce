@@ -2,7 +2,8 @@ import { ProductData, validateProduct } from "./ProductData"
 
 export type Offer = {
     items: CartItem[],
-    total: number
+    total: number,
+    checksum: string
 }
 
 export type CartItem = {
@@ -20,13 +21,14 @@ export const validateCartItem = (item: any): boolean => {
     return false
 }
 
-export const validateOffer = (offer: any): boolean => {
+export const validateOffer = (offer: any, omitChecksum: boolean = false): boolean => {
     if (
         typeof offer === 'object' &&
         offer !== null &&
         typeof offer.total === 'number' &&
         offer.items instanceof Array &&
-        offer.items.every(validateCartItem)
+        offer.items.every(validateCartItem) &&
+        (omitChecksum || typeof offer.checksum === 'string')
     ) return true
     return false
 }

@@ -1,7 +1,8 @@
-import { CustomerInfo } from "./types/CustomerInfo"
-import { Offer, validateOffer } from "./types/Offer"
+import { Offer } from "./types/Offer"
+import { validateOfferResponse } from "./types/OfferResponse"
 import { PaymentData, validatePaymentData } from "./types/PaymentData"
 import { ProductData, validateProduct } from "./types/ProductData"
+import { PurchaseRequest } from "./types/PurchaseRequest"
 
 const BASE_URL = 'http://localhost:8080'
 
@@ -24,20 +25,28 @@ const getOffer = async (): Promise<Offer> => {
     const res = await fetch(`${BASE_URL}/api/sales/offer`)
     if (!res.ok) throw new Error(res.statusText)
     const data = await res.json()
-    if (!validateOffer(data)) throw new Error('Response validation failed')
-    return data as Offer
+    if (!validateOfferResponse(data)) throw new Error('Response validation failed')
+    return {
+        ...data.offer,
+        checksum: data.checksum
+    }
 }
 
-const getPaymentData = async (customerInfo: CustomerInfo): Promise<PaymentData> => {
+const getPaymentData = async (req: PurchaseRequest): Promise<PaymentData> => {
     const res = await fetch(`${BASE_URL}/api/sales/purchase`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(customerInfo)
+        body: JSON.stringify(req)
     })
 
-    if (!res.ok) throw new Error(res.statusText)
+    if (!res.ok) {
+        if (res.status === 409) {
+            throw new Error('checksum mismatch')
+        }
+        throw new Error(res.statusText)
+    }
     const data = await res.json()
     if (!validatePaymentData(data)) throw new Error('Response validation failed')
     return data as PaymentData
