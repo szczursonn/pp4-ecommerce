@@ -14,14 +14,14 @@ ecommerce:
   pos-id: "654321"
 ```
 ### api routes:
-- GET /api/products - get list of all available products
-- GET /api/products/{productId} - get product by id
+- GET /api/products - get list of all available products, returns ProductData[]
+- GET /api/products/{productId} - get product by id, returns ProductData
 - POST /api/products/generate - generate mock product
-- GET /api/sales/offer - get cart
-- POST /api/sales/offer/{productId}?quantity={quantity} - add product to cart (overwrites if already in cart)
+- GET /api/sales/offer - get cart, returns OfferResponse
+- POST /api/sales/offer/{productId}?quantity={quantity} - add product to cart (overwrites if already in cart), quantity is optional (defaults to 1)
 - DELETE /api/sales/offer/{productId} - remove product from cart
-- POST /api/sales/purchase (req.body = CustomerInfo) - make a purchase, returns PaymentData, 409 if cart is empty
-- GET /api/contacts - get list of inquiries
+- POST /api/sales/purchase (req.body = PurchaseRequest) - make a purchase, returns PaymentData, 400 if cart is empty, 409 if offer checksum is invalid
+- GET /api/contacts - get list of inquiries, returns Inquiry[]
 - POST /api/contacts (req.body = Inquiry) - add a new inquiry
 
 ### json entities:
@@ -33,6 +33,13 @@ ecommerce:
   imageUrl: string | null
   price: number
   archived: boolean
+}
+```
+- OfferResponse
+```
+{
+	offer: Offer,
+	checksum: string
 }
 ```
 - Offer  
@@ -47,6 +54,13 @@ ecommerce:
 {
     product: ProductData
     quantity: number
+}
+```
+- PurchaseRequest
+```
+{
+	customerInfo: CustomerInfo,
+	checksum: string
 }
 ```
 - CustomerInfo  
