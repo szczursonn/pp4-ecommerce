@@ -80,7 +80,7 @@ public class App {
                 appProperties.getClientId(),
                 appProperties.getClientSecret(),
                 "",
-                "http://localhost:3000/paymentCallback"
+                appProperties.getRedirectUri()
         );
         return new PayUPaymentGateway(payU);
     }

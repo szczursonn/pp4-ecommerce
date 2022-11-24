@@ -9,6 +9,7 @@ public class AppProperties {
     private String clientId;
     private String clientSecret;
     private String posId;
+    private String redirectUri;
 
     public String getClientId() {
         return clientId;
@@ -32,5 +33,13 @@ public class AppProperties {
 
     public void setPosId(String posId) {
         this.posId = posId;
+    }
+
+    public String getRedirectUri() {
+        return redirectUri;
+    }
+
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
     }
 }

@@ -6,12 +6,14 @@
    1. ecommerce.clientid - OAuth2 Client ID from PayU
    2. ecommerce.clientsecret - OAuth2 Client Secret from PayU
    3. ecommerce.posid - POS ID from PayU
+   4. ecommerce.redirecturi - where to redirect after payment is done
 #### Sample secrets.yaml
 ```
 ecommerce:
   client-id: "123456"
   client-secret: "d9a4536ba53v4f51605366a5d3f47"
   pos-id: "654321"
+  redirect-uri: "http://localhost:3000/paymentCallback"
 ```
 ### api routes:
 - GET /api/products - get list of all available products, returns ProductData[]
